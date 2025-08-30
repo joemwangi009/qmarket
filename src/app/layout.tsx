@@ -6,14 +6,14 @@ import { Providers } from '@/components/Providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'QMarket - The Future of Commerce is Decentralized',
-  description: 'Experience the future of e-commerce with QMarket. Shop securely with cryptocurrency, enjoy lightning-fast transactions, and discover a world of innovative products.',
-  keywords: ['cryptocurrency', 'e-commerce', 'decentralized', 'shopping', 'crypto payments', 'blockchain commerce'],
+  title: 'QMarket - Premium Online Shopping Experience',
+  description: 'Discover amazing products at unbeatable prices. Shop the latest trends with confidence - fast shipping, easy returns, and secure payments on everything from electronics to fashion.',
+  keywords: ['online shopping', 'e-commerce', 'retail', 'fashion', 'electronics', 'home goods', 'secure shopping', 'fast delivery'],
   authors: [{ name: 'QMarket Team' }],
   creator: 'QMarket',
   openGraph: {
-    title: 'QMarket - The Future of Commerce is Decentralized',
-    description: 'Experience the future of e-commerce with QMarket. Shop securely with cryptocurrency, enjoy lightning-fast transactions, and discover a world of innovative products.',
+    title: 'QMarket - Premium Online Shopping Experience',
+    description: 'Discover amazing products at unbeatable prices. Shop the latest trends with confidence - fast shipping, easy returns, and secure payments on everything from electronics to fashion.',
     url: 'https://qmarket.com',
     siteName: 'QMarket',
     locale: 'en_US',
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'QMarket - The Future of Commerce is Decentralized',
-    description: 'Experience the future of e-commerce with QMarket. Shop securely with cryptocurrency, enjoy lightning-fast transactions, and discover a world of innovative products.',
+    title: 'QMarket - Premium Online Shopping Experience',
+    description: 'Discover amazing products at unbeatable prices. Shop the latest trends with confidence - fast shipping, easy returns, and secure payments on everything from electronics to fashion.',
   },
 }
 

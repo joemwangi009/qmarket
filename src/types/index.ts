@@ -1,40 +1,36 @@
-export interface User {
-  id: string
-  email: string
-  role: 'USER' | 'ADMIN'
-  addresses: Address[]
-  orders: Order[]
-  createdAt: Date
-  updatedAt: Date
-}
-
-export interface Address {
-  id: string
-  userId: string
-  firstName: string
-  lastName: string
-  addressLine1: string
-  addressLine2?: string
-  city: string
-  state: string
-  postalCode: string
-  country: string
-  phone?: string
-  isDefault: boolean
-  createdAt: Date
-  updatedAt: Date
-}
-
 export interface Product {
   id: string
   name: string
-  slug: string
   description: string
   price: number
-  images: string[]
-  inventory: number
+  originalPrice?: number
+  image: string
+  slug: string
   category: string
-  isFeatured: boolean
+  tags: string[]
+  inStock: boolean
+  rating?: number
+  reviewCount?: number
+  featured?: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface Category {
+  id: string
+  name: string
+  description: string
+  slug: string
+  image?: string
+  parentId?: string
+  children?: Category[]
+}
+
+export interface User {
+  id: string
+  email: string
+  name: string
+  avatar?: string
   createdAt: Date
   updatedAt: Date
 }
@@ -42,58 +38,52 @@ export interface Product {
 export interface Order {
   id: string
   userId: string
-  total: number
-  status: OrderStatus
-  shippingAddressId: string
-  transactionHash?: string
-  paymentGatewayId?: string
-  paymentGateway?: PaymentGateway
   items: OrderItem[]
+  status: OrderStatus
+  total: number
   shippingAddress: Address
-  user: User
-  payment?: Payment
+  paymentMethod: string
   createdAt: Date
   updatedAt: Date
 }
 
 export interface OrderItem {
-  id: string
-  orderId: string
   productId: string
   quantity: number
-  priceAtTime: number
+  price: number
   product: Product
-  createdAt: Date
 }
 
-export interface Payment {
-  id: string
-  orderId: string
-  amount: number
-  currency: string
-  status: PaymentStatus
-  gatewayResponse?: Record<string, unknown>
-  createdAt: Date
-  updatedAt: Date
+export interface Address {
+  firstName: string
+  lastName: string
+  address: string
+  city: string
+  state: string
+  zipCode: string
+  country: string
+  phone: string
 }
 
-export type OrderStatus = 'PENDING' | 'PAID' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED'
-export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED'
-export type PaymentGateway = 'NOWPAYMENTS' | 'COINBASE_COMMERCE'
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
 
 export interface CartItem {
   product: Product
   quantity: number
 }
 
-export interface CryptoPrice {
-  symbol: string
-  price: number
-  change24h: number
-}
-
 export interface PaymentSession {
   id: string
   paymentUrl: string
-  expiresAt: Date
+  status: 'pending' | 'completed' | 'failed'
+}
+
+export interface SearchFilters {
+  category?: string
+  minPrice?: number
+  maxPrice?: number
+  rating?: number
+  inStock?: boolean
+  sortBy?: 'price' | 'name' | 'rating' | 'newest'
+  sortOrder?: 'asc' | 'desc'
 } 

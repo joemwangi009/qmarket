@@ -17,10 +17,14 @@ const mockFeaturedProducts: Product[] = [
     slug: 'premium-wireless-headphones',
     description: 'High-quality wireless headphones with noise cancellation',
     price: 299.99,
-    images: ['/api/placeholder/400/400'],
-    inventory: 15,
+    originalPrice: 399.99,
+    image: '/api/placeholder/400/400',
     category: 'Electronics',
-    isFeatured: true,
+    tags: ['wireless', 'noise-cancelling', 'premium'],
+    inStock: true,
+    rating: 4.8,
+    reviewCount: 1247,
+    featured: true,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -30,10 +34,14 @@ const mockFeaturedProducts: Product[] = [
     slug: 'smart-fitness-watch',
     description: 'Advanced fitness tracking with heart rate monitoring',
     price: 199.99,
-    images: ['/api/placeholder/400/400'],
-    inventory: 25,
+    originalPrice: 249.99,
+    image: '/api/placeholder/400/400',
     category: 'Electronics',
-    isFeatured: true,
+    tags: ['fitness', 'smartwatch', 'health'],
+    inStock: true,
+    rating: 4.6,
+    reviewCount: 892,
+    featured: true,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -43,10 +51,13 @@ const mockFeaturedProducts: Product[] = [
     slug: 'organic-coffee-beans',
     description: 'Premium organic coffee beans from sustainable farms',
     price: 24.99,
-    images: ['/api/placeholder/400/400'],
-    inventory: 100,
+    image: '/api/placeholder/400/400',
     category: 'Food & Beverages',
-    isFeatured: true,
+    tags: ['organic', 'coffee', 'sustainable'],
+    inStock: true,
+    rating: 4.9,
+    reviewCount: 2156,
+    featured: true,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -56,10 +67,14 @@ const mockFeaturedProducts: Product[] = [
     slug: 'designer-backpack',
     description: 'Stylish and durable backpack for everyday use',
     price: 89.99,
-    images: ['/api/placeholder/400/400'],
-    inventory: 30,
+    originalPrice: 129.99,
+    image: '/api/placeholder/400/400',
     category: 'Fashion',
-    isFeatured: true,
+    tags: ['designer', 'durable', 'stylish'],
+    inStock: true,
+    rating: 4.7,
+    reviewCount: 634,
+    featured: true,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -101,7 +116,7 @@ export const FeaturedProducts = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-xl text-gray-600 max-w-2xl mx-auto"
           >
-            Discover our handpicked selection of premium products, all available for purchase with cryptocurrency.
+            Discover our handpicked selection of premium products, all available with fast shipping and easy returns.
           </motion.p>
         </div>
 
@@ -122,14 +137,19 @@ export const FeaturedProducts = () => {
                   >
                     <div className="relative h-80 bg-gray-100">
                       <Image
-                        src={product.images[0]}
+                        src={product.image}
                         alt={product.name}
                         fill
                         className="object-cover"
                       />
-                      {product.isFeatured && (
+                      {product.featured && (
                         <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                           Featured
+                        </div>
+                      )}
+                      {product.originalPrice && product.originalPrice > product.price && (
+                        <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                          {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
                         </div>
                       )}
                     </div>
@@ -149,16 +169,29 @@ export const FeaturedProducts = () => {
                             <Star
                               key={i}
                               className={`h-4 w-4 ${
-                                i < 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                                i < Math.floor(product.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'
                               }`}
                             />
                           ))}
-                          <span className="text-sm text-gray-500 ml-2">(4.8)</span>
+                          <span className="text-sm text-gray-500 ml-2">({product.rating})</span>
                         </div>
                         
-                        <span className="text-2xl font-bold text-blue-600">
-                          {formatPrice(product.price)}
-                        </span>
+                        <div className="text-right">
+                          {product.originalPrice && product.originalPrice > product.price ? (
+                            <div>
+                              <span className="text-2xl font-bold text-blue-600">
+                                {formatPrice(product.price)}
+                              </span>
+                              <span className="text-lg text-gray-500 line-through ml-2">
+                                {formatPrice(product.originalPrice)}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-2xl font-bold text-blue-600">
+                              {formatPrice(product.price)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                       
                       <div className="flex space-x-3">

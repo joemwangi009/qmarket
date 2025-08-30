@@ -12,14 +12,27 @@ export function formatPrice(price: number, currency: string = 'USD'): string {
   }).format(price)
 }
 
-export function formatCryptoPrice(price: number, symbol: string): string {
-  return `${price.toFixed(8)} ${symbol}`
-}
-
 export function generateSlug(text: string): string {
   return text
     .toLowerCase()
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '')
+}
+
+export function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date)
+}
+
+export function truncateText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text
+  return text.slice(0, maxLength) + '...'
+}
+
+export function calculateDiscount(originalPrice: number, salePrice: number): number {
+  return Math.round(((originalPrice - salePrice) / originalPrice) * 100)
 } 

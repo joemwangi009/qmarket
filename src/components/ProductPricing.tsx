@@ -2,26 +2,19 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { TrendingUp, TrendingDown, Coins } from 'lucide-react'
-import { formatPrice, formatCryptoPrice } from '@/lib/utils'
+import { DollarSign, TrendingUp, Clock, Shield, Truck } from 'lucide-react'
 
 interface ProductPricingProps {
   price: number
+  originalPrice?: number
   currency?: string
+  discount?: number
+  freeShipping?: boolean
+  inStock?: boolean
 }
 
-// Mock crypto prices - in production, this would come from CoinGecko API
-const mockCryptoPrices = {
-  BTC: { price: 43250.67, change24h: 2.45 },
-  ETH: { price: 2650.34, change24h: -1.23 },
-  USDT: { price: 1.00, change24h: 0.01 },
-  USDC: { price: 1.00, change24h: 0.02 },
-  BNB: { price: 312.45, change24h: 3.67 },
-  LTC: { price: 68.92, change24h: -0.85 },
-}
-
-// Mock fiat exchange rates
-const mockFiatRates = {
+// Mock exchange rates for international customers
+const mockExchangeRates = {
   USD: 1.00,
   EUR: 0.92,
   GBP: 0.79,
@@ -30,10 +23,19 @@ const mockFiatRates = {
   AUD: 1.52,
 }
 
-export const ProductPricing: React.FC<ProductPricingProps> = ({ price, currency = 'USD' }) => {
+export const ProductPricing: React.FC<ProductPricingProps> = ({ 
+  price, 
+  originalPrice, 
+  currency = 'USD',
+  discount,
+  freeShipping = false,
+  inStock = true
+}) => {
   const [selectedCurrency, setSelectedCurrency] = useState(currency)
-  const [selectedCrypto, setSelectedCrypto] = useState('BTC')
   const [isUpdating, setIsUpdating] = useState(false)
+
+  // Calculate discount percentage
+  const discountPercentage = originalPrice ? Math.round(((originalPrice - price) / originalPrice) * 100) : 0
 
   // Simulate real-time price updates
   useEffect(() => {
@@ -45,14 +47,8 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({ price, currency 
     return () => clearInterval(interval)
   }, [])
 
-  const calculateCryptoPrice = (usdPrice: number, crypto: string) => {
-    const cryptoData = mockCryptoPrices[crypto as keyof typeof mockCryptoPrices]
-    if (!cryptoData) return null
-    return usdPrice / cryptoData.price
-  }
-
-  const calculateFiatPrice = (usdPrice: number, targetCurrency: string) => {
-    const rate = mockFiatRates[targetCurrency as keyof typeof mockFiatRates]
+  const calculateLocalPrice = (usdPrice: number, targetCurrency: string) => {
+    const rate = mockExchangeRates[targetCurrency as keyof typeof mockExchangeRates]
     if (!rate) return usdPrice
     return usdPrice * rate
   }
@@ -69,7 +65,7 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({ price, currency 
     return symbols[curr] || '$'
   }
 
-  const formatFiatPrice = (price: number, curr: string) => {
+  const formatPrice = (price: number, curr: string) => {
     const symbol = getCurrencySymbol(curr)
     if (curr === 'JPY') {
       return `${symbol}${Math.round(price).toLocaleString()}`
@@ -77,106 +73,64 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({ price, currency 
     return `${symbol}${price.toFixed(2)}`
   }
 
-  const currentFiatPrice = calculateFiatPrice(price, selectedCurrency)
-  const currentCryptoPrice = calculateCryptoPrice(price, selectedCrypto)
-  const cryptoData = mockCryptoPrices[selectedCrypto as keyof typeof mockCryptoPrices]
+  const localPrice = calculateLocalPrice(price, selectedCurrency)
 
   return (
-    <div className="space-y-6">
+    <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
       {/* Main Price Display */}
-      <div className="space-y-4">
+      <div className="space-y-2">
         <div className="flex items-baseline space-x-3">
-          <span className="text-4xl font-bold text-blue-600">
-            {formatFiatPrice(currentFiatPrice, selectedCurrency)}
+          <span className="text-3xl font-bold text-gray-900">
+            {formatPrice(localPrice, selectedCurrency)}
           </span>
-          {selectedCurrency !== 'USD' && (
-            <span className="text-lg text-gray-500">
-              ({formatPrice(price)})
+          {originalPrice && (
+            <span className="text-lg text-gray-500 line-through">
+              {formatPrice(calculateLocalPrice(originalPrice, selectedCurrency), selectedCurrency)}
+            </span>
+          )}
+          {discountPercentage > 0 && (
+            <span className="bg-red-100 text-red-800 text-sm font-medium px-2 py-1 rounded-full">
+              {discountPercentage}% OFF
             </span>
           )}
         </div>
-
-        {/* Crypto Price Display */}
-        {currentCryptoPrice && (
-          <motion.div
-            key={selectedCrypto}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center space-x-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200"
-          >
-            <Coins className="h-5 w-5 text-blue-600" />
-            <div>
-              <div className="text-lg font-semibold text-gray-900">
-                ~{formatCryptoPrice(currentCryptoPrice, selectedCrypto)}
-              </div>
-              <div className="text-sm text-gray-600">
-                Based on current {selectedCrypto} price
-              </div>
-            </div>
-            <div className="ml-auto flex items-center space-x-2">
-              <span className={`text-sm font-medium ${
-                cryptoData.change24h >= 0 ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {cryptoData.change24h >= 0 ? '+' : ''}{cryptoData.change24h.toFixed(2)}%
-              </span>
-              {cryptoData.change24h >= 0 ? (
-                <TrendingUp className="h-4 w-4 text-green-600" />
-              ) : (
-                <TrendingDown className="h-4 w-4 text-red-600" />
-              )}
-            </div>
-          </motion.div>
+        
+        {freeShipping && (
+          <div className="flex items-center space-x-2 text-green-600">
+            <Truck className="h-4 w-4" />
+            <span className="text-sm font-medium">Free Shipping</span>
+          </div>
         )}
       </div>
 
-      {/* Currency Selection */}
-      <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-gray-900">Select Currency</h3>
-        
-        {/* Fiat Currencies */}
-        <div>
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Fiat Currencies</h4>
-          <div className="grid grid-cols-3 gap-2">
-            {Object.keys(mockFiatRates).map((curr) => (
-              <button
-                key={curr}
-                onClick={() => setSelectedCurrency(curr)}
-                className={`p-3 rounded-lg border transition-all duration-200 ${
-                  selectedCurrency === curr
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                <div className="text-sm font-medium">{curr}</div>
-                <div className="text-xs text-gray-500">
-                  {formatFiatPrice(calculateFiatPrice(price, curr), curr)}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
+      {/* Stock Status */}
+      <div className="flex items-center space-x-2">
+        <div className={`w-3 h-3 rounded-full ${inStock ? 'bg-green-500' : 'bg-red-500'}`}></div>
+        <span className={`text-sm ${inStock ? 'text-green-600' : 'text-red-600'}`}>
+          {inStock ? 'In Stock' : 'Out of Stock'}
+        </span>
+      </div>
 
-        {/* Cryptocurrencies */}
-        <div>
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Cryptocurrencies</h4>
-          <div className="grid grid-cols-3 gap-2">
-            {Object.keys(mockCryptoPrices).map((crypto) => (
-              <button
-                key={crypto}
-                onClick={() => setSelectedCrypto(crypto)}
-                className={`p-3 rounded-lg border transition-all duration-200 ${
-                  selectedCrypto === crypto
-                    ? 'border-purple-500 bg-purple-50 text-purple-700'
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                <div className="text-sm font-medium">{crypto}</div>
-                <div className="text-xs text-gray-500">
-                  {formatCryptoPrice(calculateCryptoPrice(price, crypto) || 0, crypto)}
-                </div>
-              </button>
-            ))}
-          </div>
+      {/* Currency Selection */}
+      <div>
+        <h4 className="text-sm font-medium text-gray-700 mb-3">Select Currency</h4>
+        <div className="grid grid-cols-3 gap-2">
+          {Object.keys(mockExchangeRates).map((curr) => (
+            <button
+              key={curr}
+              onClick={() => setSelectedCurrency(curr)}
+              className={`p-3 rounded-lg border transition-all duration-200 ${
+                selectedCurrency === curr
+                  ? 'border-blue-500 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              <div className="text-sm font-medium">{curr}</div>
+              <div className="text-xs text-gray-500">
+                {formatPrice(calculateLocalPrice(price, curr), curr)}
+              </div>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -192,14 +146,37 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({ price, currency 
         </motion.div>
       )}
 
+      {/* Trust Indicators */}
+      <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+        <h4 className="text-sm font-medium text-gray-700">Why Shop with QMarket?</h4>
+        <div className="space-y-2 text-sm text-gray-600">
+          <div className="flex items-center space-x-2">
+            <Shield className="h-4 w-4 text-green-500" />
+            <span>Secure payments with SSL encryption</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Truck className="h-4 w-4 text-blue-500" />
+            <span>Fast worldwide shipping</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <TrendingUp className="h-4 w-4 text-purple-500" />
+            <span>Best price guarantee</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Clock className="h-4 w-4 text-orange-500" />
+            <span>30-day easy returns</span>
+          </div>
+        </div>
+      </div>
+
       {/* Disclaimer */}
       <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
         <p className="mb-1">💡 <strong>Price Information:</strong></p>
         <ul className="space-y-1">
-          <li>• Fiat prices are updated in real-time</li>
-          <li>• Crypto prices are approximate and may vary</li>
+          <li>• Prices are updated in real-time</li>
+          <li>• Exchange rates are approximate</li>
           <li>• Final price is calculated at checkout</li>
-          <li>• All transactions are processed in USD</li>
+          <li>• All transactions are secure and encrypted</li>
         </ul>
       </div>
     </div>
