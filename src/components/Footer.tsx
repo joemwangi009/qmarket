@@ -189,10 +189,10 @@ export const Footer = () => {
           className="text-center text-gray-400 text-sm"
         >
           <p className="mb-2">
-            © 2024 Project Quantum. All rights reserved.
+            © 2024 QMarket. All rights reserved.
           </p>
           <p>
-            Built with ❤️ for the decentralized future
+            Built with ❤️ for the future of commerce
           </p>
         </motion.div>
       </div>

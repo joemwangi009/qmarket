@@ -6,20 +6,23 @@ import { Providers } from '@/components/Providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Project Quantum - The Future of Commerce is Decentralized',
-  description: 'Premium crypto-native e-commerce platform. Buy with Bitcoin, Ethereum, and other cryptocurrencies. Secure, fast, and decentralized shopping experience.',
-  keywords: 'crypto, e-commerce, bitcoin, ethereum, cryptocurrency, shopping, decentralized',
-  authors: [{ name: 'Project Quantum Team' }],
+  title: 'QMarket - The Future of Commerce is Decentralized',
+  description: 'Experience the future of e-commerce with QMarket. Shop securely with cryptocurrency, enjoy lightning-fast transactions, and discover a world of innovative products.',
+  keywords: ['cryptocurrency', 'e-commerce', 'decentralized', 'shopping', 'crypto payments', 'blockchain commerce'],
+  authors: [{ name: 'QMarket Team' }],
+  creator: 'QMarket',
   openGraph: {
-    title: 'Project Quantum - The Future of Commerce is Decentralized',
-    description: 'Premium crypto-native e-commerce platform. Buy with Bitcoin, Ethereum, and other cryptocurrencies.',
-    type: 'website',
+    title: 'QMarket - The Future of Commerce is Decentralized',
+    description: 'Experience the future of e-commerce with QMarket. Shop securely with cryptocurrency, enjoy lightning-fast transactions, and discover a world of innovative products.',
+    url: 'https://qmarket.com',
+    siteName: 'QMarket',
     locale: 'en_US',
+    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Project Quantum - The Future of Commerce is Decentralized',
-    description: 'Premium crypto-native e-commerce platform.',
+    title: 'QMarket - The Future of Commerce is Decentralized',
+    description: 'Experience the future of e-commerce with QMarket. Shop securely with cryptocurrency, enjoy lightning-fast transactions, and discover a world of innovative products.',
   },
 }
 
