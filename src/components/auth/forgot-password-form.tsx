@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useState, useEffect } from 'react'
+import { createClientComponentClient, SupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,10 +9,22 @@ import { toast } from 'sonner'
 import { Mail, Loader2, CheckCircle } from 'lucide-react'
 
 export function ForgotPasswordForm() {
-  const supabase = createClientComponentClient()
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
   const [email, setEmail] = useState('')
   const [isPending, setIsPending] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  useEffect(() => {
+    try {
+      const client = createClientComponentClient()
+      setSupabase(client)
+      setIsInitialized(true)
+    } catch (error) {
+      console.error('Failed to initialize Supabase client:', error)
+      setIsInitialized(false)
+    }
+  }, [])
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -21,6 +33,11 @@ export function ForgotPasswordForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!isInitialized || !supabase) {
+      toast.error('Authentication service is not available. Please try again later.')
+      return
+    }
     
     if (!email.trim()) {
       toast.error('Please enter your email address')
@@ -50,6 +67,17 @@ export function ForgotPasswordForm() {
     } finally {
       setIsPending(false)
     }
+  }
+
+  if (!isInitialized) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="flex items-center space-x-2">
+          <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+          <span className="text-gray-600">Initializing...</span>
+        </div>
+      </div>
+    )
   }
 
   if (isSubmitted) {

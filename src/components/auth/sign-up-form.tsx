@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient, SupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -26,7 +26,7 @@ interface PasswordStrength {
 
 export function SignUpForm() {
   const router = useRouter()
-  const supabase = createClientComponentClient()
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
   
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -39,7 +39,20 @@ export function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isPending, setIsPending] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
   const [passwordStrength, setPasswordStrength] = useState<PasswordStrength>({ score: 0, feedback: [] })
+
+  // Initialize Supabase client
+  useEffect(() => {
+    try {
+      const client = createClientComponentClient()
+      setSupabase(client)
+      setIsInitialized(true)
+    } catch (error) {
+      console.error('Failed to initialize Supabase client:', error)
+      setIsInitialized(false)
+    }
+  }, [])
 
   // Password strength checker
   const checkPasswordStrength = (password: string): PasswordStrength => {
@@ -101,6 +114,11 @@ export function SignUpForm() {
   }
 
   const handleOAuthSignIn = async (provider: 'google' | 'github') => {
+    if (!isInitialized || !supabase) {
+      toast.error('Authentication service is not available. Please try again later.')
+      return
+    }
+
     try {
       setIsPending(true)
       const { error } = await supabase.auth.signInWithOAuth({
@@ -122,6 +140,11 @@ export function SignUpForm() {
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!isInitialized || !supabase) {
+      toast.error('Authentication service is not available. Please try again later.')
+      return
+    }
     
     if (!validateForm()) return
 
@@ -168,6 +191,17 @@ export function SignUpForm() {
     if (score <= 2) return 'Fair'
     if (score <= 3) return 'Good'
     return 'Strong'
+  }
+
+  if (!isInitialized) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="flex items-center space-x-2">
+          <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+          <span className="text-gray-600">Initializing...</span>
+        </div>
+      </div>
+    )
   }
 
   return (

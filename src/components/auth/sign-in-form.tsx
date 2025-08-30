@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient, SupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,7 +19,7 @@ interface FormData {
 export function SignInForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const supabase = createClientComponentClient()
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
   
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -29,9 +29,24 @@ export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [isPending, setIsPending] = useState(false)
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  // Initialize Supabase client
+  useEffect(() => {
+    try {
+      const client = createClientComponentClient()
+      setSupabase(client)
+      setIsInitialized(true)
+    } catch (error) {
+      console.error('Failed to initialize Supabase client:', error)
+      setIsInitialized(false)
+    }
+  }, [])
 
   // Check if user is already authenticated
   useEffect(() => {
+    if (!isInitialized || !supabase) return
+
     const checkAuth = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser()
@@ -52,7 +67,7 @@ export function SignInForm() {
     }
 
     checkAuth()
-  }, [supabase.auth, router, searchParams])
+  }, [supabase, router, searchParams, isInitialized])
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -75,6 +90,11 @@ export function SignInForm() {
   }
 
   const handleOAuthSignIn = async (provider: 'google' | 'github') => {
+    if (!isInitialized || !supabase) {
+      toast.error('Authentication service is not available. Please try again later.')
+      return
+    }
+
     try {
       setIsPending(true)
       const { error } = await supabase.auth.signInWithOAuth({
@@ -96,6 +116,11 @@ export function SignInForm() {
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!isInitialized || !supabase) {
+      toast.error('Authentication service is not available. Please try again later.')
+      return
+    }
     
     if (!validateForm()) return
 
@@ -133,13 +158,15 @@ export function SignInForm() {
     }
   }
 
-  // Show loading state while checking authentication
-  if (isCheckingAuth) {
+  // Show loading state while checking authentication or initializing
+  if (isCheckingAuth || !isInitialized) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="flex items-center space-x-2">
           <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-          <span className="text-gray-600">Checking authentication...</span>
+          <span className="text-gray-600">
+            {!isInitialized ? 'Initializing...' : 'Checking authentication...'}
+          </span>
         </div>
       </div>
     )
