@@ -7,8 +7,8 @@ import { ArrowLeft, Lock } from 'lucide-react'
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
+    <div className="py-16 bg-gradient-to-br from-slate-50 to-gray-100">
+      <div className="max-w-md mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">

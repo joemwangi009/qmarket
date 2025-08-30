@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function VerifyEmailPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
+    <div className="py-16 bg-gradient-to-br from-slate-50 to-gray-100">
+      <div className="max-w-md mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
@@ -53,7 +53,7 @@ export default function VerifyEmailPage() {
               <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 Resend Verification Email
               </Button>
-              
+
               <Link href="/auth/sign-in" className="block">
                 <Button variant="outline" className="w-full">
                   <ArrowLeft className="w-4 h-4 mr-2" />

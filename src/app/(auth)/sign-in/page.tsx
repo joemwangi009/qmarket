@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 function SignInPageContent() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
+    <div className="py-16 bg-gradient-to-br from-slate-50 to-gray-100">
+      <div className="max-w-md mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
@@ -50,8 +50,8 @@ function SignInPageContent() {
 export default function SignInPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center">
-        <div className="text-center">
+      <div className="py-16 bg-gradient-to-br from-slate-50 to-gray-100">
+        <div className="max-w-md mx-auto px-4 text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
