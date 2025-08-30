@@ -23,7 +23,7 @@ export const Navigation = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-blue-600">Quantum</h1>
+              <h1 className="text-2xl font-bold text-blue-600">QMarket</h1>
             </Link>
           </div>
 
@@ -84,11 +84,11 @@ export const Navigation = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link href="/auth/signin" className="text-gray-700 hover:text-blue-600 transition-colors">
+                <Link href="/auth/sign-in" className="text-gray-700 hover:text-blue-600 transition-colors">
                   Sign In
                 </Link>
                 <Link 
-                  href="/auth/signup" 
+                  href="/auth/sign-up" 
                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
                 >
                   Sign Up
