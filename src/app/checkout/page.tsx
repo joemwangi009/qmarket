@@ -2,11 +2,21 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Check, Lock, Shield, Truck, CreditCard, Paypal } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Check, Lock, Shield, Truck, CreditCard, Coins } from 'lucide-react'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
 import { useCart } from '@/contexts/CartContext'
-import { formatPrice } from '@/lib/utils'
+import { formatPrice, formatCryptoPrice } from '@/lib/utils'
+
+// Mock crypto prices - in production, this would come from CoinGecko API
+const mockCryptoPrices = {
+  BTC: { price: 43250.67, change24h: 2.45, transactionTime: '10-30 minutes' },
+  ETH: { price: 2650.34, change24h: -1.23, transactionTime: '2-5 minutes' },
+  USDT: { price: 1.00, change24h: 0.01, transactionTime: '1-3 minutes' },
+  USDC: { price: 1.00, change24h: 0.02, transactionTime: '1-3 minutes' },
+  BNB: { price: 312.45, change24h: 3.67, transactionTime: '3-5 minutes' },
+  LTC: { price: 68.92, change24h: -0.85, transactionTime: '2-5 minutes' },
+}
 
 const checkoutSteps = [
   { id: 'cart', title: 'Cart Review', icon: Check },
@@ -15,16 +25,10 @@ const checkoutSteps = [
   { id: 'confirm', title: 'Payment', icon: Lock },
 ]
 
-const paymentMethods = [
-  { id: 'card', name: 'Credit/Debit Card', icon: CreditCard, description: 'Visa, Mastercard, American Express' },
-  { id: 'paypal', name: 'PayPal', icon: Paypal, description: 'Pay with your PayPal account' },
-  { id: 'apple', name: 'Apple Pay', icon: CreditCard, description: 'Quick and secure with Apple Pay' },
-]
-
 export default function CheckoutPage() {
   const { cart } = useCart()
   const [currentStep, setCurrentStep] = useState('cart')
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card')
+  const [selectedCrypto, setSelectedCrypto] = useState('BTC')
   const [shippingInfo, setShippingInfo] = useState({
     firstName: '',
     lastName: '',
@@ -38,9 +42,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false)
 
   const totalUSD = cart.items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
-  const tax = totalUSD * 0.08
-  const shipping = totalUSD > 50 ? 0 : 5.99
-  const total = totalUSD + tax + shipping
+  const totalCrypto = totalUSD / mockCryptoPrices[selectedCrypto as keyof typeof mockCryptoPrices].price
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -75,7 +77,7 @@ export default function CheckoutPage() {
     
     // In production, this would:
     // 1. Create order in database
-    // 2. Generate payment session with Stripe/PayPal
+    // 2. Generate payment session with NOWPayments/Coinbase Commerce
     // 3. Redirect to their secure payment page
     
     // For demo purposes, show success message
@@ -185,29 +187,45 @@ export default function CheckoutPage() {
       case 'payment':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-900">Payment Method</h2>
-            <div className="space-y-4">
-              {paymentMethods.map((method) => (
+            <h2 className="text-2xl font-semibold text-gray-900">Select Cryptocurrency</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {Object.entries(mockCryptoPrices).map(([crypto, data]) => (
                 <div
-                  key={method.id}
-                  onClick={() => setSelectedPaymentMethod(method.id)}
+                  key={crypto}
+                  onClick={() => setSelectedCrypto(crypto)}
                   className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
-                    selectedPaymentMethod === method.id
+                    selectedCrypto === crypto
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
-                  <div className="flex items-center space-x-3">
-                    <method.icon className={`h-6 w-6 ${
-                      selectedPaymentMethod === method.id ? 'text-blue-600' : 'text-gray-400'
-                    }`} />
-                    <div>
-                      <h3 className="font-medium text-gray-900">{method.name}</h3>
-                      <p className="text-sm text-gray-600">{method.description}</p>
+                  <div className="text-center">
+                    <div className="text-lg font-semibold text-gray-900">{crypto}</div>
+                    <div className="text-sm text-gray-600">${data.price.toLocaleString()}</div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      {data.change24h >= 0 ? '+' : ''}{data.change24h.toFixed(2)}%
                     </div>
+                    <div className="text-xs text-gray-500">{data.transactionTime}</div>
                   </div>
                 </div>
               ))}
+            </div>
+            
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h3 className="font-medium text-blue-900 mb-2">Payment Summary</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Total (USD):</span>
+                  <span className="font-medium">{formatPrice(totalUSD)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Total ({selectedCrypto}):</span>
+                  <span className="font-medium">{formatCryptoPrice(totalCrypto, selectedCrypto)}</span>
+                </div>
+                <div className="text-xs text-blue-700">
+                  * Prices are approximate and may vary based on current market conditions
+                </div>
+              </div>
             </div>
           </div>
         )
@@ -222,17 +240,29 @@ export default function CheckoutPage() {
                 <span className="font-medium">{formatPrice(totalUSD)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Tax:</span>
-                <span className="font-medium">{formatPrice(tax)}</span>
-              </div>
-              <div className="flex justify-between">
                 <span className="text-gray-600">Shipping:</span>
-                <span className="font-medium">{shipping === 0 ? 'Free' : formatPrice(shipping)}</span>
+                <span className="font-medium text-green-600">Free</span>
               </div>
               <div className="border-t border-gray-200 pt-4">
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total:</span>
-                  <span>{formatPrice(total)}</span>
+                  <span>{formatPrice(totalUSD)}</span>
+                </div>
+                <div className="text-sm text-gray-600 mt-1">
+                  ({formatCryptoPrice(totalCrypto, selectedCrypto)})
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              <div className="flex items-start space-x-3">
+                <Coins className="h-5 w-5 text-yellow-600 mt-0.5" />
+                <div>
+                  <h3 className="font-medium text-yellow-900">Cryptocurrency Payment</h3>
+                  <p className="text-sm text-yellow-700 mt-1">
+                    You will be redirected to a secure payment gateway to complete your {selectedCrypto} transaction.
+                    The final amount will be calculated based on current market rates.
+                  </p>
                 </div>
               </div>
             </div>
@@ -329,8 +359,8 @@ export default function CheckoutPage() {
                   </>
                 ) : (
                   <>
-                    <Lock className="h-4 w-4" />
-                    <span>Complete Payment</span>
+                    <Coins className="h-4 w-4" />
+                    <span>Pay with {selectedCrypto}</span>
                   </>
                 )}
               </button>

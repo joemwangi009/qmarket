@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Star, ShoppingCart, Eye, Heart } from 'lucide-react'
 import { Product } from '@/types'
-import { formatPrice, formatCryptoPrice } from '@/lib/utils'
+import { formatPrice } from '@/lib/utils'
 
 interface ProductGridProps {
   products: Product[]
@@ -14,24 +14,8 @@ interface ProductGridProps {
   onAddToCart: (product: Product) => void
 }
 
-// Mock crypto prices - in production, this would come from CoinGecko API
-const mockCryptoPrices = {
-  BTC: 43250.67,
-  ETH: 2650.34,
-  USDT: 1.00,
-  USDC: 1.00,
-  BNB: 312.45,
-  LTC: 68.92,
-}
-
 export const ProductGrid: React.FC<ProductGridProps> = ({ products, viewMode, onAddToCart }) => {
   const [hoveredProduct, setHoveredProduct] = useState<string | null>(null)
-
-  const calculateCryptoPrice = (usdPrice: number, crypto: string) => {
-    const cryptoPrice = mockCryptoPrices[crypto as keyof typeof mockCryptoPrices]
-    if (!cryptoPrice) return null
-    return usdPrice / cryptoPrice
-  }
 
   const handleAddToCart = (e: React.MouseEvent, product: Product) => {
     e.preventDefault()
@@ -74,8 +58,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products, viewMode, on
                     </p>
                     <div className="flex items-center space-x-4 text-sm text-gray-500">
                       <span>Category: {product.category}</span>
-                      <span>Stock: {product.inventory}</span>
-                      {product.isFeatured && (
+                      <span className={product.inStock ? 'text-green-600' : 'text-red-600'}>
+                        {product.inStock ? 'In Stock' : 'Out of Stock'}
+                      </span>
+                      {product.featured && (
                         <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
                           Featured
                         </span>
@@ -89,15 +75,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products, viewMode, on
                       {formatPrice(product.price)}
                     </div>
                     
-                    {/* Crypto Prices */}
-                    <div className="space-y-1 mb-4">
-                      <div className="text-sm text-gray-600">
-                        ~{formatCryptoPrice(calculateCryptoPrice(product.price, 'BTC') || 0, 'BTC')}
+                    {/* Original Price if on sale */}
+                    {product.originalPrice && product.originalPrice > product.price && (
+                      <div className="text-sm text-gray-500 line-through mb-2">
+                        {formatPrice(product.originalPrice)}
                       </div>
-                      <div className="text-sm text-gray-600">
-                        ~{formatCryptoPrice(calculateCryptoPrice(product.price, 'ETH') || 0, 'ETH')}
-                      </div>
-                    </div>
+                    )}
 
                     {/* Rating */}
                     <div className="flex items-center justify-end mb-4">
@@ -106,12 +89,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products, viewMode, on
                           <Star
                             key={i}
                             className={`h-4 w-4 ${
-                              i < 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                              i < Math.floor(product.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'
                             }`}
                           />
                         ))}
                       </div>
-                      <span className="text-sm text-gray-500 ml-2">(4.8)</span>
+                      <span className="text-sm text-gray-500 ml-2">({product.rating})</span>
                     </div>
 
                     {/* Action Buttons */}
@@ -188,16 +171,16 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products, viewMode, on
             </div>
 
             {/* Featured Badge */}
-            {product.isFeatured && (
+            {product.featured && (
               <div className="absolute top-3 left-3 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
                 Featured
               </div>
             )}
 
             {/* Stock Badge */}
-            {product.inventory < 10 && (
+            {!product.inStock && (
               <div className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                Low Stock
+                Out of Stock
               </div>
             )}
           </div>
@@ -221,12 +204,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products, viewMode, on
                   <Star
                     key={i}
                     className={`h-4 w-4 ${
-                      i < 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                      i < Math.floor(product.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-gray-500 ml-2">(4.8)</span>
+              <span className="text-sm text-gray-500 ml-2">({product.rating})</span>
             </div>
 
             {/* Price */}
@@ -235,11 +218,12 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products, viewMode, on
                 {formatPrice(product.price)}
               </div>
               
-              {/* Crypto Prices */}
-              <div className="text-sm text-gray-500 space-y-1 mt-1">
-                <div>~{formatCryptoPrice(calculateCryptoPrice(product.price, 'BTC') || 0, 'BTC')}</div>
-                <div>~{formatCryptoPrice(calculateCryptoPrice(product.price, 'ETH') || 0, 'ETH')}</div>
-              </div>
+              {/* Original Price if on sale */}
+              {product.originalPrice && product.originalPrice > product.price && (
+                <div className="text-sm text-gray-500 line-through mt-1">
+                  {formatPrice(product.originalPrice)}
+                </div>
+              )}
             </div>
 
             {/* Category */}
@@ -250,10 +234,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({ products, viewMode, on
             {/* Add to Cart Button */}
             <button
               onClick={(e) => handleAddToCart(e, product)}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2"
+              disabled={!product.inStock}
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center space-x-2"
             >
               <ShoppingCart className="h-4 w-4" />
-              <span>Add to Cart</span>
+              <span>{product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
             </button>
           </div>
         </motion.div>

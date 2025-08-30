@@ -12,6 +12,10 @@ export function formatPrice(price: number, currency: string = 'USD'): string {
   }).format(price)
 }
 
+export function formatCryptoPrice(price: number, symbol: string): string {
+  return `${price.toFixed(8)} ${symbol}`
+}
+
 export function generateSlug(text: string): string {
   return text
     .toLowerCase()

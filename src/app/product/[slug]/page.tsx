@@ -21,15 +21,14 @@ Advanced Bluetooth 5.0 technology provides stable, high-quality audio streaming 
 
 With up to 30 hours of battery life on a single charge, you can enjoy your music all day long. The quick charge feature gives you 5 hours of playback with just 10 minutes of charging.`,
   price: 299.99,
-  images: [
-    '/api/placeholder/800/800',
-    '/api/placeholder/800/800',
-    '/api/placeholder/800/800',
-    '/api/placeholder/800/800',
-  ],
-  inventory: 15,
+  originalPrice: 399.99,
+  image: '/api/placeholder/800/800',
   category: 'Electronics',
-  isFeatured: true,
+  tags: ['wireless', 'noise-cancelling', 'premium', 'bluetooth'],
+  inStock: true,
+  rating: 4.8,
+  reviewCount: 1247,
+  featured: true,
   createdAt: new Date('2024-01-15'),
   updatedAt: new Date('2024-01-15'),
 }
@@ -148,7 +147,7 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
                 <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
                   {product.category}
                 </span>
-                {product.isFeatured && (
+                {product.featured && (
                   <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
                     Featured
                   </span>
@@ -206,7 +205,7 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
             {/* Left Column - Image Gallery */}
             <div>
               <ProductImageGallery
-                images={product.images}
+                images={[product.image]}
                 productName={product.name}
               />
             </div>

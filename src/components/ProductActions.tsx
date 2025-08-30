@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ShoppingCart, Shield, Truck, Clock, AlertTriangle, CheckCircle } from 'lucide-react'
+import { ShoppingCart, Shield, Truck, Clock, AlertTriangle, CheckCircle, Coins } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
 import { Product } from '@/types'
 
@@ -17,7 +17,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
   const { addToCart } = useCart()
 
   const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1 && newQuantity <= product.inventory) {
+    if (newQuantity >= 1 && newQuantity <= 10) { // Set reasonable max quantity
       setQuantity(newQuantity)
     }
   }
@@ -40,7 +40,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
   }
 
   const getInventoryStatus = () => {
-    if (product.inventory === 0) {
+    if (!product.inStock) {
       return {
         status: 'out-of-stock',
         icon: AlertTriangle,
@@ -48,15 +48,6 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
         bgColor: 'bg-red-50',
         borderColor: 'border-red-200',
         message: 'Out of Stock',
-      }
-    } else if (product.inventory <= 5) {
-      return {
-        status: 'low-stock',
-        icon: AlertTriangle,
-        color: 'text-orange-600',
-        bgColor: 'bg-orange-50',
-        borderColor: 'border-orange-200',
-        message: `Only ${product.inventory} left!`,
       }
     } else {
       return {
@@ -83,9 +74,9 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
             <p className={`font-medium ${inventoryStatus.color}`}>
               {inventoryStatus.message}
             </p>
-            {product.inventory > 0 && (
+            {product.inStock && (
               <p className="text-sm text-gray-600">
-                {product.inventory} item{product.inventory !== 1 ? 's' : ''} available
+                Available for immediate purchase
               </p>
             )}
           </div>
@@ -93,7 +84,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
       </div>
 
       {/* Quantity Selector */}
-      {product.inventory > 0 && (
+      {product.inStock && (
         <div className="space-y-3">
           <label className="text-sm font-medium text-gray-700">Quantity</label>
           <div className="flex items-center space-x-3">
@@ -107,14 +98,14 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
             <input
               type="number"
               min="1"
-              max={product.inventory}
+              max="10"
               value={quantity}
               onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
               className="w-16 h-10 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <button
               onClick={() => handleQuantityChange(quantity + 1)}
-              disabled={quantity >= product.inventory}
+              disabled={quantity >= 10}
               className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               +
@@ -126,7 +117,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
       {/* Action Buttons */}
       <div className="space-y-3">
         {/* Add to Cart Button */}
-        {product.inventory > 0 && (
+        {product.inStock && (
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -149,7 +140,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
         )}
 
         {/* Buy Now with Crypto Button */}
-        {product.inventory > 0 && (
+        {product.inStock && (
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -164,7 +155,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
               </>
             ) : (
               <>
-                <Shield className="h-5 w-5" />
+                <Coins className="h-5 w-5" />
                 <span>Buy Now with Crypto</span>
               </>
             )}
@@ -172,7 +163,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
         )}
 
         {/* Out of Stock Message */}
-        {product.inventory === 0 && (
+        {!product.inStock && (
           <div className="w-full bg-gray-100 text-gray-500 py-4 px-6 rounded-lg font-semibold text-center">
             Currently Out of Stock
           </div>
@@ -182,7 +173,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
       {/* Trust Indicators */}
       <div className="space-y-3">
         <div className="flex items-center space-x-3 text-sm text-gray-600">
-          <Shield className="h-4 w-4 text-green-600" />
+          <Coins className="h-4 w-4 text-purple-600" />
           <span>Secure Crypto Payment</span>
         </div>
         <div className="flex items-center space-x-3 text-sm text-gray-600">
