@@ -135,10 +135,10 @@ export function TodaysDeals() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Today's Deals
+              Today&apos;s Deals
             </h2>
             <p className="text-lg text-gray-600">
-              Limited time offers - Don't miss out!
+              Limited time offers - Don&apos;t miss out!
             </p>
           </div>
           <div className="flex items-center space-x-2">
