@@ -18,7 +18,7 @@ const freeShippingProducts: FreeShippingProduct[] = [
   {
     id: '1',
     name: 'Wireless Earbuds Pro',
-    image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 89,
     category: 'Electronics',
     rating: 4.8,
@@ -27,7 +27,7 @@ const freeShippingProducts: FreeShippingProduct[] = [
   {
     id: '2',
     name: 'Organic Cotton T-Shirt',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 29,
     category: 'Fashion',
     rating: 4.6,
@@ -36,7 +36,7 @@ const freeShippingProducts: FreeShippingProduct[] = [
   {
     id: '3',
     name: 'Stainless Steel Water Bottle',
-    image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 24,
     category: 'Home & Garden',
     rating: 4.9,
@@ -45,7 +45,7 @@ const freeShippingProducts: FreeShippingProduct[] = [
   {
     id: '4',
     name: 'Portable Power Bank',
-    image: 'https://images.unsplash.com/photo-1609592806598-ef9b4b1c2e10?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 39,
     category: 'Electronics',
     rating: 4.7,
@@ -54,7 +54,7 @@ const freeShippingProducts: FreeShippingProduct[] = [
   {
     id: '5',
     name: 'Natural Face Moisturizer',
-    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 18,
     category: 'Beauty',
     rating: 4.5,
@@ -63,7 +63,7 @@ const freeShippingProducts: FreeShippingProduct[] = [
   {
     id: '6',
     name: 'Smart LED Light Bulb',
-    image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 15,
     category: 'Home & Garden',
     rating: 4.4,
@@ -72,7 +72,7 @@ const freeShippingProducts: FreeShippingProduct[] = [
   {
     id: '7',
     name: 'Wireless Phone Charger',
-    image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 22,
     category: 'Electronics',
     rating: 4.6,
@@ -81,7 +81,7 @@ const freeShippingProducts: FreeShippingProduct[] = [
   {
     id: '8',
     name: 'Bamboo Cutting Board',
-    image: 'https://images.unsplash.com/photo-1588668214407-6ea9a3e2621f?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 32,
     category: 'Kitchen',
     rating: 4.8,

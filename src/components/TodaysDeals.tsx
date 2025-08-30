@@ -20,67 +20,67 @@ const deals: Deal[] = [
   {
     id: '1',
     name: 'Wireless Bluetooth Headphones',
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop&crop=center',
-    originalPrice: 199,
-    salePrice: 159,
-    discount: 20,
-    endTime: new Date(Date.now() + 4 * 60 * 60 * 1000), // 4 hours from now
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+    originalPrice: 129.99,
+    salePrice: 79.99,
+    discount: 38,
+    endTime: new Date(Date.now() + 2 * 60 * 60 * 1000 + 15 * 60 * 1000), // 2 hours 15 minutes from now
     soldCount: 45,
     totalStock: 100
   },
   {
     id: '2',
     name: 'Smart Fitness Watch',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop&crop=center',
-    originalPrice: 299,
-    salePrice: 239,
-    discount: 20,
-    endTime: new Date(Date.now() + 6 * 60 * 60 * 1000), // 6 hours from now
-    soldCount: 32,
+    image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+    originalPrice: 299.99,
+    salePrice: 199.99,
+    discount: 33,
+    endTime: new Date(Date.now() + 4 * 60 * 60 * 1000 + 32 * 60 * 1000), // 4 hours 32 minutes from now
+    soldCount: 28,
     totalStock: 75
   },
   {
     id: '3',
     name: 'Portable Bluetooth Speaker',
-    image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&h=300&fit=crop&crop=center',
-    originalPrice: 89,
-    salePrice: 59,
-    discount: 34,
-    endTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
-    soldCount: 78,
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+    originalPrice: 89.99,
+    salePrice: 59.99,
+    discount: 33,
+    endTime: new Date(Date.now() + 6 * 60 * 60 * 1000 + 18 * 60 * 1000), // 6 hours 18 minutes from now
+    soldCount: 67,
     totalStock: 120
   },
   {
     id: '4',
-    name: 'Gaming Mouse RGB',
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=300&fit=crop&crop=center',
-    originalPrice: 79,
-    salePrice: 49,
-    discount: 38,
-    endTime: new Date(Date.now() + 8 * 60 * 60 * 1000), // 8 hours from now
-    soldCount: 23,
+    name: 'Wireless Charging Pad',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+    originalPrice: 49.99,
+    salePrice: 29.99,
+    discount: 40,
+    endTime: new Date(Date.now() + 8 * 60 * 60 * 1000 + 45 * 60 * 1000), // 8 hours 45 minutes from now
+    soldCount: 34,
     totalStock: 60
   },
   {
     id: '5',
-    name: 'Wireless Charging Pad',
-    image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=300&h=300&fit=crop&crop=center',
-    originalPrice: 49,
-    salePrice: 29,
-    discount: 41,
-    endTime: new Date(Date.now() + 3 * 60 * 60 * 1000), // 3 hours from now
-    soldCount: 67,
+    name: 'USB-C Power Bank',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+    originalPrice: 79.99,
+    salePrice: 49.99,
+    discount: 38,
+    endTime: new Date(Date.now() + 10 * 60 * 60 * 1000 + 22 * 60 * 1000), // 10 hours 22 minutes from now
+    soldCount: 52,
     totalStock: 90
   },
   {
     id: '6',
-    name: 'USB-C Hub Adapter',
-    image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=300&h=300&fit=crop&crop=center',
-    originalPrice: 39,
-    salePrice: 19,
-    discount: 51,
-    endTime: new Date(Date.now() + 5 * 60 * 60 * 1000), // 5 hours from now
-    soldCount: 89,
+    name: 'Wireless Gaming Mouse',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+    originalPrice: 119.99,
+    salePrice: 79.99,
+    discount: 33,
+    endTime: new Date(Date.now() + 12 * 60 * 60 * 1000 + 8 * 60 * 1000), // 12 hours 8 minutes from now
+    soldCount: 41,
     totalStock: 150
   }
 ]

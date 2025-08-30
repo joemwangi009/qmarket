@@ -17,57 +17,57 @@ interface RareProduct {
 const rareProducts: RareProduct[] = [
   {
     id: '1',
-    name: 'Vintage Leica M3 Camera',
-    description: 'Classic 1954 rangefinder camera in mint condition',
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=400&fit=crop&crop=center',
-    price: 4500,
-    category: 'Photography',
-    rarity: 'Limited Edition'
+    name: 'Vintage Camera Collection',
+    description: 'Rare 1950s Leica cameras in mint condition',
+    price: 2499.99,
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    category: 'Collectibles',
+    rarity: 'Ultra Rare'
   },
   {
     id: '2',
-    name: 'Handcrafted Japanese Chef Knife',
-    description: 'Traditional Damascus steel blade by master craftsman',
-    image: 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=400&h=400&fit=crop&crop=center',
-    price: 1200,
-    category: 'Kitchen',
-    rarity: 'Artisan Made'
+    name: 'Handcrafted Wooden Desk',
+    description: 'One-of-a-kind artisan desk made from reclaimed oak',
+    price: 1899.99,
+    image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    category: 'Furniture',
+    rarity: 'Limited Edition'
   },
   {
     id: '3',
-    name: 'Antique Persian Rug',
-    description: '19th century hand-woven silk carpet with intricate patterns',
-    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop&crop=center',
-    price: 8500,
-    category: 'Home Decor',
-    rarity: 'Antique'
+    name: 'Antique Pocket Watch',
+    description: 'Swiss-made pocket watch from the 1800s',
+    price: 899.99,
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    category: 'Jewelry',
+    rarity: 'Vintage'
   },
   {
     id: '4',
-    name: 'Swiss Mechanical Watch',
-    description: 'Limited edition timepiece with tourbillon movement',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop&crop=center',
-    price: 28000,
-    category: 'Luxury',
-    rarity: 'Exclusive'
+    name: 'Artisan Ceramic Vase',
+    description: 'Hand-thrown ceramic vase by renowned potter',
+    price: 599.99,
+    image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    category: 'Home Decor',
+    rarity: 'Handcrafted'
   },
   {
     id: '5',
-    name: 'Organic Tea Collection',
-    description: 'Rare single-origin teas from remote mountain regions',
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop&crop=center',
-    price: 180,
-    category: 'Beverages',
-    rarity: 'Seasonal'
+    name: 'Limited Edition Sneakers',
+    description: 'Only 100 pairs made worldwide',
+    price: 799.99,
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    category: 'Footwear',
+    rarity: 'Limited Edition'
   },
   {
     id: '6',
-    name: 'Artisan Leather Bag',
-    description: 'Hand-stitched Italian leather with brass hardware',
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop&crop=center',
-    price: 650,
-    category: 'Fashion',
-    rarity: 'Handmade'
+    name: 'Custom Guitar',
+    description: 'Hand-built acoustic guitar with unique inlay',
+    price: 3499.99,
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+    category: 'Musical Instruments',
+    rarity: 'Custom Made'
   }
 ]
 

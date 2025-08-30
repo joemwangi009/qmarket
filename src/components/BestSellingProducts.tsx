@@ -21,7 +21,7 @@ const bestSellingProducts: BestSellingProduct[] = [
   {
     id: '1',
     name: 'Wireless Bluetooth Headphones',
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 89,
     originalPrice: 129,
     category: 'Electronics',
@@ -33,7 +33,7 @@ const bestSellingProducts: BestSellingProduct[] = [
   {
     id: '2',
     name: 'Smart Fitness Watch',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 199,
     originalPrice: 299,
     category: 'Electronics',
@@ -45,7 +45,7 @@ const bestSellingProducts: BestSellingProduct[] = [
   {
     id: '3',
     name: 'Portable Bluetooth Speaker',
-    image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 59,
     originalPrice: 89,
     category: 'Electronics',
@@ -57,7 +57,7 @@ const bestSellingProducts: BestSellingProduct[] = [
   {
     id: '4',
     name: 'Gaming Mouse RGB',
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 49,
     originalPrice: 79,
     category: 'Electronics',
@@ -69,7 +69,7 @@ const bestSellingProducts: BestSellingProduct[] = [
   {
     id: '5',
     name: 'Wireless Charging Pad',
-    image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 29,
     originalPrice: 49,
     category: 'Electronics',
@@ -81,7 +81,7 @@ const bestSellingProducts: BestSellingProduct[] = [
   {
     id: '6',
     name: 'USB-C Hub Adapter',
-    image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 19,
     originalPrice: 39,
     category: 'Electronics',

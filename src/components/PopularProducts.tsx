@@ -20,7 +20,7 @@ const popularProducts: PopularProduct[] = [
   {
     id: '1',
     name: 'iPhone 15 Pro Max',
-    image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 1199,
     originalPrice: 1399,
     category: 'Electronics',
@@ -31,7 +31,7 @@ const popularProducts: PopularProduct[] = [
   {
     id: '2',
     name: 'Nike Air Jordan 1',
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 170,
     originalPrice: 200,
     category: 'Shoes',
@@ -42,7 +42,7 @@ const popularProducts: PopularProduct[] = [
   {
     id: '3',
     name: 'Sony WH-1000XM5',
-    image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 399,
     originalPrice: 449,
     category: 'Electronics',
@@ -53,7 +53,7 @@ const popularProducts: PopularProduct[] = [
   {
     id: '4',
     name: 'MacBook Air M2',
-    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 1199,
     originalPrice: 1299,
     category: 'Electronics',
@@ -64,7 +64,7 @@ const popularProducts: PopularProduct[] = [
   {
     id: '5',
     name: 'Adidas Ultraboost 22',
-    image: 'https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 180,
     originalPrice: 220,
     category: 'Shoes',
@@ -75,7 +75,7 @@ const popularProducts: PopularProduct[] = [
   {
     id: '6',
     name: 'Samsung Galaxy S24',
-    image: 'https://images.unsplash.com/photo-1610945265064-0d34e4b0c0c7?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 999,
     originalPrice: 1199,
     category: 'Electronics',
@@ -86,7 +86,7 @@ const popularProducts: PopularProduct[] = [
   {
     id: '7',
     name: 'Canon EOS R6 Mark II',
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 2499,
     originalPrice: 2799,
     category: 'Photography',
@@ -97,7 +97,7 @@ const popularProducts: PopularProduct[] = [
   {
     id: '8',
     name: 'Apple Watch Series 9',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop&crop=center',
+    image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
     price: 399,
     originalPrice: 449,
     category: 'Electronics',

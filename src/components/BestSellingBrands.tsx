@@ -20,74 +20,62 @@ interface Brand {
 const brands: Brand[] = [
   {
     id: '1',
-    name: 'Apple',
-    logo: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=100&h=100&fit=crop&crop=center',
+    name: 'TechPro',
+    logo: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
     featuredProduct: {
       id: 'p1',
-      name: 'iPhone 15 Pro',
-      image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300&h=300&fit=crop&crop=center',
-      price: 999,
-      originalPrice: 1199
+      name: 'Wireless Earbuds Pro',
+      image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+      price: 129.99,
+      originalPrice: 149.99
     }
   },
   {
     id: '2',
-    name: 'Samsung',
-    logo: 'https://images.unsplash.com/photo-1610945265064-0d34e4b0c0c7?w=100&h=100&fit=crop&crop=center',
+    name: 'SportFlex',
+    logo: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
     featuredProduct: {
       id: 'p2',
-      name: 'Galaxy S24 Ultra',
-      image: 'https://images.unsplash.com/photo-1610945265064-0d34e4b0c0c7?w=300&h=300&fit=crop&crop=center',
-      price: 1199,
-      originalPrice: 1399
+      name: 'Running Shoes Elite',
+      image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+      price: 189.99,
+      originalPrice: 209.99
     }
   },
   {
     id: '3',
-    name: 'Nike',
-    logo: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&h=100&fit=crop&crop=center',
+    name: 'HomeStyle',
+    logo: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
     featuredProduct: {
       id: 'p3',
-      name: 'Air Max 270',
-      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&crop=center',
-      price: 150,
-      originalPrice: 180
+      name: 'Smart LED Lamp',
+      image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+      price: 79.99,
+      originalPrice: 99.99
     }
   },
   {
     id: '4',
-    name: 'Adidas',
-    logo: 'https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=100&h=100&fit=crop&crop=center',
+    name: 'BeautyGlow',
+    logo: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
     featuredProduct: {
       id: 'p4',
-      name: 'Ultraboost 22',
-      image: 'https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=300&h=300&fit=crop&crop=center',
-      price: 180,
-      originalPrice: 220
+      name: 'Organic Face Serum',
+      image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+      price: 49.99,
+      originalPrice: 59.99
     }
   },
   {
     id: '5',
-    name: 'Sony',
-    logo: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=100&h=100&fit=crop&crop=center',
+    name: 'KitchenCraft',
+    logo: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
     featuredProduct: {
       id: 'p5',
-      name: 'WH-1000XM5',
-      image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=300&h=300&fit=crop&crop=center',
-      price: 399,
-      originalPrice: 449
-    }
-  },
-  {
-    id: '6',
-    name: 'Canon',
-    logo: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=100&h=100&fit=crop&crop=center',
-    featuredProduct: {
-      id: 'p6',
-      name: 'EOS R6 Mark II',
-      image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=300&h=300&fit=crop&crop=center',
-      price: 2499,
-      originalPrice: 2799
+      name: 'Chef\'s Knife Set',
+      image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop',
+      price: 159.99,
+      originalPrice: 179.99
     }
   }
 ]
