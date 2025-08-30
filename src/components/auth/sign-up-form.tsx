@@ -45,6 +45,13 @@ export function SignUpForm() {
   // Initialize Supabase client
   useEffect(() => {
     try {
+      // Check if required environment variables are available
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        console.error('Missing Supabase environment variables')
+        setIsInitialized(false)
+        return
+      }
+      
       const client = createClientComponentClient()
       setSupabase(client)
       setIsInitialized(true)
@@ -194,6 +201,24 @@ export function SignUpForm() {
   }
 
   if (!isInitialized) {
+    // Check if environment variables are missing
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      return (
+        <div className="text-center py-12">
+          <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <XCircle className="w-8 h-8 text-red-600" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Configuration Error</h3>
+          <p className="text-gray-600 mb-4">
+            Authentication service is not properly configured. Please contact support.
+          </p>
+          <p className="text-sm text-gray-500">
+            Error: Missing Supabase environment variables
+          </p>
+        </div>
+      )
+    }
+    
     return (
       <div className="flex items-center justify-center py-12">
         <div className="flex items-center space-x-2">
