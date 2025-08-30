@@ -1,0 +1,29 @@
+STEPS TO FIX TAILWIND CSS STYLES
+==================================
+
+1. OPEN A NEW TERMINAL/COMMAND PROMPT
+   (Don't use the one that's stuck on git push)
+
+2. NAVIGATE TO THE PROJECT DIRECTORY:
+   cd "C:\Users\Administrator\OneDrive\Documents\QMarket\qmarket"
+
+3. INSTALL THE NEW DEPENDENCIES:
+   npm install -D tailwindcss@^3.4.0 postcss autoprefixer
+
+4. WAIT FOR INSTALLATION TO COMPLETE
+
+5. START THE DEVELOPMENT SERVER:
+   npm run dev
+
+6. OPEN YOUR BROWSER AND GO TO:
+   http://localhost:3000
+
+WHAT I FIXED:
+==============
+- Downgraded from Tailwind CSS v4 (unstable) to v3 (stable)
+- Updated PostCSS configuration
+- Created proper Tailwind config file
+- Fixed CSS imports to use @tailwind directives
+- Updated package.json dependencies
+
+Your website styles should now be working properly! 
