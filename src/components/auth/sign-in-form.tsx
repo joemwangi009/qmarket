@@ -81,21 +81,7 @@ export function SignInForm() {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  const validateForm = (): boolean => {
-    if (!formData.email || !formData.password) {
-      toast.error('Please fill in all fields')
-      return false
-    }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(formData.email)) {
-      toast.error('Please enter a valid email address')
-      return false
-    }
-
-    return true
-  }
 
   const handleOAuthSignIn = async (provider: 'google') => {
     if (!isInitialized || !supabase) {
@@ -166,7 +152,7 @@ export function SignInForm() {
         const redirectPath = searchParams.get('redirectTo') || '/dashboard'
         router.push(redirectPath)
       }
-    } catch (error) {
+    } catch {
       setError('An unexpected error occurred. Please try again.')
     } finally {
       setIsPending(false)

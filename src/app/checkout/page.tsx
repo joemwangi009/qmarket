@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Check, Lock, Shield, Truck, CreditCard, Coins } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Check, Lock, Truck, CreditCard, Coins } from 'lucide-react'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
 import { useCart } from '@/contexts/CartContext'

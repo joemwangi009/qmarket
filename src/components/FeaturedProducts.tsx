@@ -1,59 +1,70 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { Product } from '@/types'
 import { fetchFeaturedProducts } from '@/lib/products'
-import { ChevronLeft, ChevronRight, Star, ShoppingCart } from 'lucide-react'
-import Link from 'next/link'
+import { useCart } from '@/contexts/CartContext'
+import { Star, ShoppingCart, Heart, Eye } from 'lucide-react'
 
-export default function FeaturedProducts() {
+export const FeaturedProducts: React.FC = () => {
+  const { addToCart } = useCart()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadFeaturedProducts = async () => {
       try {
+        setLoading(true)
+        setError(null)
         const featuredProducts = await fetchFeaturedProducts(8)
         setProducts(featuredProducts)
-      } catch (error) {
-        console.error('Error loading featured products:', error)
+      } catch (err) {
+        setError('Failed to load featured products')
+        console.error('Error loading featured products:', err)
       } finally {
         setLoading(false)
       }
     }
 
-    loadProducts()
+    loadFeaturedProducts()
   }, [])
 
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex + 4 >= products.length ? 0 : prevIndex + 4
-    )
+  const handleAddToCart = (product: Product, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addToCart(product, 1)
   }
 
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? Math.max(0, products.length - 4) : prevIndex - 4
-    )
+  const handleQuickView = (product: Product, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    // In a real app, this would open a quick view modal
+    console.log('Quick view:', product.name)
+  }
+
+  const handleAddToWishlist = (product: Product, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    // In a real app, this would add to wishlist
+    console.log('Add to wishlist:', product.name)
   }
 
   if (loading) {
     return (
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
-            <p className="text-gray-600">Loading amazing products...</p>
+            <p className="text-gray-600">Discover our most popular items</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md p-4 animate-pulse">
-                <div className="bg-gray-200 h-48 rounded-lg mb-4"></div>
-                <div className="bg-gray-200 h-4 rounded mb-2"></div>
-                <div className="bg-gray-200 h-4 rounded mb-2"></div>
-                <div className="bg-gray-200 h-6 rounded mb-4"></div>
-                <div className="bg-gray-200 h-10 rounded"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="bg-gray-100 rounded-lg p-4 animate-pulse">
+                <div className="w-full h-48 bg-gray-200 rounded-lg mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
               </div>
             ))}
           </div>
@@ -62,129 +73,129 @@ export default function FeaturedProducts() {
     )
   }
 
-  if (products.length === 0) {
-    return (
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
-            <p className="text-gray-600">No featured products available at the moment.</p>
-          </div>
-        </div>
-      </section>
-    )
+  if (error || products.length === 0) {
+    return null // Don't show section if no featured products
   }
 
-  const visibleProducts = products.slice(currentIndex, currentIndex + 4)
-
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-12">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
-            <p className="text-gray-600">Handpicked products you&apos;ll love</p>
-          </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={prevSlide}
-              className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-              disabled={currentIndex === 0}
-            >
-              <ChevronLeft className="w-5 h-5 text-gray-600" />
-            </button>
-            <button
-              onClick={nextSlide}
-              className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-              disabled={currentIndex + 4 >= products.length}
-            >
-              <ChevronRight className="w-5 h-5 text-gray-600" />
-            </button>
-          </div>
+    <section className="py-16 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+          <p className="text-gray-600">Discover our most popular items</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {visibleProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-              <Link href={`/product/${product.slug}`}>
-                <div className="relative">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-48 object-cover"
-                  />
-                  {product.originalPrice && product.originalPrice > product.price && (
-                    <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
-                      {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
-                    </div>
-                  )}
-                  {!product.inStock && (
-                    <div className="absolute top-2 right-2 bg-gray-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
-                      Out of Stock
-                    </div>
-                  )}
-                </div>
-              </Link>
-              
-              <div className="p-4">
-                <Link href={`/product/${product.slug}`}>
-                  <h3 className="font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
-                    {product.name}
-                  </h3>
-                </Link>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {products.map((product) => (
+            <Link
+              key={product.id}
+              href={`/product/${product.slug}`}
+              className="group bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300"
+            >
+              <div className="relative">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
                 
-                <div className="flex items-center mb-2">
-                  {product.rating && (
-                    <>
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < Math.floor(product.rating!) ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-gray-600 ml-2">
-                        ({product.reviewCount})
-                      </span>
-                    </>
+                {/* Product badges */}
+                <div className="absolute top-2 left-2 flex flex-col gap-1">
+                  {product.featured && (
+                    <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">
+                      Featured
+                    </span>
+                  )}
+                  {product.originalPrice && product.originalPrice > product.price && (
+                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                      {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                    </span>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xl font-bold text-gray-900">${product.price}</span>
+                {/* Quick actions */}
+                <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <button
+                    onClick={(e) => handleQuickView(product, e)}
+                    className="bg-white p-2 rounded-full shadow-md hover:bg-gray-50 transition-colors"
+                    title="Quick view"
+                  >
+                    <Eye className="h-4 w-4 text-gray-600" />
+                  </button>
+                  <button
+                    onClick={(e) => handleAddToWishlist(product, e)}
+                    className="bg-white p-2 rounded-full shadow-md hover:bg-gray-50 transition-colors"
+                    title="Add to wishlist"
+                  >
+                    <Heart className="h-4 w-4 text-gray-600" />
+                  </button>
+                </div>
+
+                {/* Stock status */}
+                {!product.inStock && (
+                  <div className="absolute bottom-2 left-2">
+                    <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                      Out of Stock
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4">
+                <h3 className="font-medium text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
+                  {product.name}
+                </h3>
+                
+                <div className="flex items-center mb-2">
+                  <div className="flex items-center">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-4 w-4 ${
+                          i < Math.floor(product.rating || 0)
+                            ? 'text-yellow-400 fill-current'
+                            : 'text-gray-300'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-gray-500 ml-2">
+                    ({product.reviewCount})
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-gray-900">
+                      ${product.price.toFixed(2)}
+                    </span>
                     {product.originalPrice && product.originalPrice > product.price && (
-                      <span className="text-sm text-gray-500 line-through">${product.originalPrice}</span>
+                      <span className="text-sm text-gray-500 line-through">
+                        ${product.originalPrice.toFixed(2)}
+                      </span>
                     )}
                   </div>
                 </div>
 
                 <button
-                  className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
-                    product.inStock
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
+                  onClick={(e) => handleAddToCart(product, e)}
                   disabled={!product.inStock}
+                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                 >
-                  <ShoppingCart className="w-4 h-4 inline mr-2" />
+                  <ShoppingCart className="h-4 w-4" />
                   {product.inStock ? 'Add to Cart' : 'Out of Stock'}
                 </button>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
-        <div className="text-center mt-8">
+        <div className="text-center mt-12">
           <Link
             href="/products"
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             View All Products
-            <ChevronRight className="w-4 h-4 ml-2" />
           </Link>
         </div>
       </div>

@@ -10,7 +10,7 @@ interface ProductFiltersProps {
   onCategoryChange: (category: string) => void
   priceRange: [number, number]
   onPriceRangeChange: (range: [number, number]) => void
-  totalProducts: number
+  totalProducts?: number
 }
 
 export const ProductFilters: React.FC<ProductFiltersProps> = ({
@@ -19,7 +19,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({
   onCategoryChange,
   priceRange,
   onPriceRangeChange,
-  totalProducts,
+  totalProducts = 0,
 }) => {
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false)
   const [expandedSections, setExpandedSections] = useState({

@@ -1,27 +1,20 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { 
   Plus, 
   Search, 
-  Filter, 
   Edit, 
   Trash2, 
   Eye, 
   EyeOff,
   Upload,
-  Download,
   Package,
-  Tag,
-  DollarSign,
-  BarChart3,
-  Calendar,
   AlertCircle,
   CheckCircle,
   Clock,
   Star,
   Image as ImageIcon,
-  Settings,
   MoreHorizontal
 } from 'lucide-react'
 
@@ -54,11 +47,7 @@ interface Product {
     slug: string
     keywords: string[]
   }
-  variations?: {
-    size?: string[]
-    color?: string[]
-    model?: string[]
-  }
+  variations?: Record<string, string[]>
   attributes?: Record<string, string>
   createdAt: string
   updatedAt: string
@@ -130,7 +119,7 @@ const mockProducts: Product[] = [
     },
     attributes: {
       material: 'Aluminum & ABS',
-      switches: 'Cherry MX',
+      switchType: 'Cherry MX',
       backlight: 'RGB'
     },
     createdAt: '2024-01-10T09:00:00Z',

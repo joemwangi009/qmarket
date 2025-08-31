@@ -62,7 +62,7 @@ export function ForgotPasswordForm() {
         setIsSubmitted(true)
         toast.success('Password reset email sent! Check your inbox.')
       }
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred. Please try again.')
     } finally {
       setIsPending(false)

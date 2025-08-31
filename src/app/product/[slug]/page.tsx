@@ -7,32 +7,11 @@ import { ProductTabs } from '@/components/ProductTabs'
 import { ProductActions } from '@/components/ProductActions'
 import { Footer } from '@/components/Footer'
 import { Star, Heart, Share2, Truck, Shield, Clock } from 'lucide-react'
+import { fetchProductBySlug } from '@/lib/products'
+import { notFound } from 'next/navigation'
 
-// Mock product data - in production, this would come from API
-const mockProduct = {
-  id: '1',
-  name: 'Premium Wireless Headphones',
-  slug: 'premium-wireless-headphones',
-  description: `Experience crystal-clear sound with our Premium Wireless Headphones. These high-end headphones feature active noise cancellation technology that blocks out ambient noise, allowing you to immerse yourself in your music or focus on your work without distractions.
-
-The premium build quality includes memory foam ear cushions that provide exceptional comfort during extended listening sessions. The lightweight aluminum frame ensures durability while maintaining a sleek, professional appearance.
-
-Advanced Bluetooth 5.0 technology provides stable, high-quality audio streaming with a range of up to 30 meters. The built-in microphone with noise reduction makes these headphones perfect for conference calls and voice commands.
-
-With up to 30 hours of battery life on a single charge, you can enjoy your music all day long. The quick charge feature gives you 5 hours of playback with just 10 minutes of charging.`,
-  price: 299.99,
-  originalPrice: 399.99,
-  image: '/api/placeholder/800/800',
-  category: 'Electronics',
-  tags: ['wireless', 'noise-cancelling', 'premium', 'bluetooth'],
-  inStock: true,
-  rating: 4.8,
-  reviewCount: 1247,
-  featured: true,
-  createdAt: new Date('2024-01-15'),
-  updatedAt: new Date('2024-01-15'),
-}
-
+// Mock data for specifications, reviews, and shipping info
+// In production, these would come from separate API endpoints
 const mockSpecifications = {
   'Brand': 'Quantum Audio',
   'Model': 'WH-2000XM5',
@@ -116,10 +95,12 @@ const mockShippingInfo = {
 }
 
 export default async function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
-  // In production, fetch product data based on slug
-  // const { slug } = await params
-  // const product = await fetchProductBySlug(slug)
-  const product = mockProduct
+  const { slug } = await params
+  const product = await fetchProductBySlug(slug)
+
+  if (!product) {
+    notFound()
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -173,13 +154,13 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
                   <Star
                     key={i}
                     className={`h-5 w-5 ${
-                      i < 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                      i < Math.floor(product.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'
                     }`}
                   />
                 ))}
               </div>
               <span className="text-gray-600">
-                4.8 out of 5 ({mockReviews.length} reviews)
+                {product.rating?.toFixed(1)} out of 5 ({product.reviewCount} reviews)
               </span>
             </div>
 
@@ -213,7 +194,11 @@ export default async function ProductDetailsPage({ params }: { params: Promise<{
             {/* Right Column - Product Info */}
             <div className="space-y-8">
               {/* Pricing */}
-              <ProductPricing price={product.price} />
+              <ProductPricing 
+                price={product.price} 
+                originalPrice={product.originalPrice}
+                inStock={product.inStock}
+              />
 
               {/* Actions */}
               <ProductActions product={product} />

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { DollarSign, TrendingUp, Clock, Shield, Truck } from 'lucide-react'
+import { TrendingUp, Clock, Shield, Truck } from 'lucide-react'
 
 interface ProductPricingProps {
   price: number
@@ -27,7 +27,6 @@ export const ProductPricing: React.FC<ProductPricingProps> = ({
   price, 
   originalPrice, 
   currency = 'USD',
-  discount,
   freeShipping = false,
   inStock = true
 }) => {

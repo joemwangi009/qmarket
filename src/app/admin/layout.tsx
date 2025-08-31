@@ -6,17 +6,16 @@ import Link from 'next/link'
 import { useAdminAuth } from '@/contexts/AdminAuthContext'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
-import { 
-  BarChart3, 
-  Package, 
-  ShoppingCart, 
-  Users, 
-  CreditCard, 
+import {
+  BarChart3,
+  Package,
+  ShoppingCart,
+  Users,
+  CreditCard,
   Settings,
   LogOut,
   Shield,
-  Home,
-  Store
+  Home
 } from 'lucide-react'
 
 export default function AdminLayout({

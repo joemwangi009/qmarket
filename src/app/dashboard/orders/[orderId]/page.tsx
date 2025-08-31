@@ -99,6 +99,14 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ orderId
   const [order] = useState(mockOrder)
   const [copiedHash, setCopiedHash] = useState(false)
 
+  // Extract orderId from params (for future use in production)
+  useEffect(() => {
+    params.then(({ orderId }) => {
+      // In production, fetch order by orderId from database
+      console.log('Order ID:', orderId)
+    })
+  }, [params])
+
   // Redirect if not authenticated
   useEffect(() => {
     if (!user) {

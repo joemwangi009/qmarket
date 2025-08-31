@@ -85,4 +85,43 @@ export async function fetchFreeShippingProducts(limit: number = 8): Promise<Prod
   // In the future, this could be a separate shipping rules table
   const products = await fetchProducts({ limit: 20, inStock: true })
   return products.filter(p => p.price < 50).slice(0, limit)
+}
+
+export async function fetchProductBySlug(slug: string): Promise<Product | null> {
+  try {
+    const response = await fetch(`${API_BASE}/products/${slug}`)
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null
+      }
+      throw new Error(`Failed to fetch product: ${response.statusText}`)
+    }
+
+    const result = await response.json()
+    return result.data || null
+  } catch (error) {
+    console.error('Error fetching product by slug:', error)
+    return null
+  }
+}
+
+export async function searchProducts(query: string, limit: number = 20): Promise<Product[]> {
+  try {
+    const searchParams = new URLSearchParams()
+    searchParams.append('search', query)
+    searchParams.append('limit', limit.toString())
+
+    const response = await fetch(`${API_BASE}/products/search?${searchParams.toString()}`)
+    
+    if (!response.ok) {
+      throw new Error(`Failed to search products: ${response.statusText}`)
+    }
+
+    const result = await response.json()
+    return result.data || []
+  } catch (error) {
+    console.error('Error searching products:', error)
+    return []
+  }
 } 

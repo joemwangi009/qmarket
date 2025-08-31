@@ -5,15 +5,17 @@ import { Search, X, TrendingUp } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface ProductSearchProps {
-  searchQuery: string
-  onSearchChange: (query: string) => void
-  suggestions: string[]
+  value: string
+  onChange: (query: string) => void
+  placeholder?: string
+  suggestions?: string[]
 }
 
 export const ProductSearch: React.FC<ProductSearchProps> = ({
-  searchQuery,
-  onSearchChange,
-  suggestions,
+  value: searchQuery,
+  onChange: onSearchChange,
+  placeholder = "Search products, categories, or brands...",
+  suggestions = [],
 }) => {
   const [isFocused, setIsFocused] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -97,7 +99,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
-          placeholder="Search products, categories, or brands..."
+          placeholder={placeholder}
           className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
         />
         

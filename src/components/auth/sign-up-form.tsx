@@ -180,7 +180,7 @@ export function SignUpForm() {
         toast.success('Account created! Please check your email to confirm your address.')
         router.push('/auth/verify-email')
       }
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred. Please try again.')
     } finally {
       setIsPending(false)

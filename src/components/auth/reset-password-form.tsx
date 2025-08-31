@@ -122,7 +122,7 @@ export function ResetPasswordForm() {
           router.push('/auth/sign-in')
         }, 2000)
       }
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred. Please try again.')
     } finally {
       setIsPending(false)
