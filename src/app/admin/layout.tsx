@@ -27,7 +27,7 @@ export default function AdminLayout({
 
   useEffect(() => {
     if (!user) {
-      router.push('/admin/login')
+      router.push('/auth/sign-in')
       return
     }
 

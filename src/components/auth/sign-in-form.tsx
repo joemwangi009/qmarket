@@ -121,42 +121,43 @@ export function SignInForm() {
     }
   }
 
-  const handleEmailSignIn = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!isInitialized || !supabase) {
-      toast.error('Authentication service is not available. Please try again later.')
-      return
-    }
-    
-    if (!validateForm()) return
+    setIsPending(true)
+    setError('')
 
     try {
-      setIsPending(true)
-      
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // First try Supabase auth for regular users
+      const { error: supabaseError } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password
       })
+      
+      if (supabaseError) {
+        // If Supabase auth fails, try custom admin auth
+        const adminResponse = await fetch('/api/admin/auth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: formData.email, password: formData.password }),
+        })
 
-      if (error) {
-        if (error.message.includes('Invalid login credentials')) {
+        if (adminResponse.ok) {
+          const adminData = await adminResponse.json()
+          // Store admin session
+          localStorage.setItem('admin-session', JSON.stringify(adminData))
+          // Redirect to admin dashboard
+          router.push('/admin')
+          return
+        } else {
+          // Both auth methods failed
           toast.error('Invalid email or password. Please try again.')
-        } else if (error.message.includes('Email not confirmed')) {
-          toast.error('Please verify your email address before signing in.')
-        } else {
-          toast.error(`Sign in failed: ${error.message}`)
         }
-      } else if (data.user) {
-        toast.success('Welcome back!')
-        
-        // Redirect based on redirectTo parameter or default to dashboard
-        const redirectTo = searchParams.get('redirectTo')
-        if (redirectTo && redirectTo.startsWith('/')) {
-          router.push(redirectTo)
-        } else {
-          router.push('/dashboard')
-        }
+      } else {
+        // Supabase auth successful - redirect based on redirectTo or default
+        const redirectPath = searchParams.get('redirectTo') || '/dashboard'
+        router.push(redirectPath)
       }
     } catch (error) {
       toast.error('An unexpected error occurred. Please try again.')
@@ -240,7 +241,7 @@ export function SignInForm() {
       </div>
 
       {/* Email Sign In Form */}
-      <form onSubmit={handleEmailSignIn} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email">Email *</Label>
