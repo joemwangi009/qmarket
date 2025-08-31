@@ -30,6 +30,7 @@ export function SignInForm() {
   const [isPending, setIsPending] = useState(false)
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [error, setError] = useState('')
 
   // Initialize Supabase client
   useEffect(() => {
@@ -126,6 +127,12 @@ export function SignInForm() {
     setIsPending(true)
     setError('')
 
+    if (!supabase) {
+      setError('Authentication service not available. Please try again.')
+      setIsPending(false)
+      return
+    }
+
     try {
       // First try Supabase auth for regular users
       const { error: supabaseError } = await supabase.auth.signInWithPassword({
@@ -152,7 +159,7 @@ export function SignInForm() {
           return
         } else {
           // Both auth methods failed
-          toast.error('Invalid email or password. Please try again.')
+          setError('Invalid email or password. Please try again.')
         }
       } else {
         // Supabase auth successful - redirect based on redirectTo or default
@@ -160,7 +167,7 @@ export function SignInForm() {
         router.push(redirectPath)
       }
     } catch (error) {
-      toast.error('An unexpected error occurred. Please try again.')
+      setError('An unexpected error occurred. Please try again.')
     } finally {
       setIsPending(false)
     }
@@ -242,6 +249,13 @@ export function SignInForm() {
 
       {/* Email Sign In Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Error Display */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+            {error}
+          </div>
+        )}
+        
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email">Email *</Label>
