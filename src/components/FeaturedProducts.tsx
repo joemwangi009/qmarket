@@ -1,259 +1,190 @@
 'use client'
 
-import React, { useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Star, ShoppingCart } from 'lucide-react'
-import { useCart } from '@/contexts/CartContext'
+import { useState, useEffect } from 'react'
 import { Product } from '@/types'
-import { formatPrice } from '@/lib/utils'
+import { fetchFeaturedProducts } from '@/lib/products'
+import { ChevronLeft, ChevronRight, Star, ShoppingCart } from 'lucide-react'
+import Link from 'next/link'
 
-// Mock featured products data
-const mockFeaturedProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Premium Wireless Headphones',
-    slug: 'premium-wireless-headphones',
-    description: 'High-quality wireless headphones with noise cancellation',
-    price: 299.99,
-    originalPrice: 399.99,
-    image: '/api/placeholder/400/400',
-    category: 'Electronics',
-    tags: ['wireless', 'noise-cancelling', 'premium'],
-    inStock: true,
-    rating: 4.8,
-    reviewCount: 1247,
-    featured: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '2',
-    name: 'Smart Fitness Watch',
-    slug: 'smart-fitness-watch',
-    description: 'Advanced fitness tracking with heart rate monitoring',
-    price: 199.99,
-    originalPrice: 249.99,
-    image: '/api/placeholder/400/400',
-    category: 'Electronics',
-    tags: ['fitness', 'smartwatch', 'health'],
-    inStock: true,
-    rating: 4.6,
-    reviewCount: 892,
-    featured: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '3',
-    name: 'Organic Coffee Beans',
-    slug: 'organic-coffee-beans',
-    description: 'Premium organic coffee beans from sustainable farms',
-    price: 24.99,
-    image: '/api/placeholder/400/400',
-    category: 'Food & Beverages',
-    tags: ['organic', 'coffee', 'sustainable'],
-    inStock: true,
-    rating: 4.9,
-    reviewCount: 2156,
-    featured: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '4',
-    name: 'Designer Backpack',
-    slug: 'designer-backpack',
-    description: 'Stylish and durable backpack for everyday use',
-    price: 89.99,
-    originalPrice: 129.99,
-    image: '/api/placeholder/400/400',
-    category: 'Fashion',
-    tags: ['designer', 'durable', 'stylish'],
-    inStock: true,
-    rating: 4.7,
-    reviewCount: 634,
-    featured: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-]
-
-export const FeaturedProducts = () => {
+export default function FeaturedProducts() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const { addToCart } = useCart()
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const featuredProducts = await fetchFeaturedProducts(8)
+        setProducts(featuredProducts)
+      } catch (error) {
+        console.error('Error loading featured products:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProducts()
+  }, [])
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % mockFeaturedProducts.length)
-  }
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => 
-      prev === 0 ? mockFeaturedProducts.length - 1 : prev - 1
+    setCurrentIndex((prevIndex) => 
+      prevIndex + 4 >= products.length ? 0 : prevIndex + 4
     )
   }
 
-  const handleAddToCart = (product: Product) => {
-    addToCart(product, 1)
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? Math.max(0, products.length - 4) : prevIndex - 4
+    )
   }
 
-  return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4"
-          >
-            Featured Products
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
-          >
-            Discover our handpicked selection of premium products, all available with fast shipping and easy returns.
-          </motion.p>
-        </div>
-
-        {/* Products Carousel */}
-        <div className="relative">
-          <div className="overflow-hidden">
-            <motion.div
-              className="flex transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-              {mockFeaturedProducts.map((product, index) => (
-                <div key={product.id} className="w-full flex-shrink-0 px-4">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                  >
-                    <div className="relative h-80 bg-gray-100">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover"
-                      />
-                      {product.featured && (
-                        <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                          Featured
-                        </div>
-                      )}
-                      {product.originalPrice && product.originalPrice > product.price && (
-                        <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                          {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="p-6">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                        {product.name}
-                      </h3>
-                      
-                      <p className="text-gray-600 mb-4 line-clamp-2">
-                        {product.description}
-                      </p>
-                      
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center space-x-1">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < Math.floor(product.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                          <span className="text-sm text-gray-500 ml-2">({product.rating})</span>
-                        </div>
-                        
-                        <div className="text-right">
-                          {product.originalPrice && product.originalPrice > product.price ? (
-                            <div>
-                              <span className="text-2xl font-bold text-blue-600">
-                                {formatPrice(product.price)}
-                              </span>
-                              <span className="text-lg text-gray-500 line-through ml-2">
-                                {formatPrice(product.originalPrice)}
-                              </span>
-                            </div>
-                          ) : (
-                            <span className="text-2xl font-bold text-blue-600">
-                              {formatPrice(product.price)}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <div className="flex space-x-3">
-                        <button
-                          onClick={() => handleAddToCart(product)}
-                          className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2"
-                        >
-                          <ShoppingCart className="h-5 w-5" />
-                          <span>Add to Cart</span>
-                        </button>
-                        
-                        <Link
-                          href={`/product/${product.slug}`}
-                          className="flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-center"
-                        >
-                          View Details
-                        </Link>
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
-              ))}
-            </motion.div>
+  if (loading) {
+    return (
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+            <p className="text-gray-600">Loading amazing products...</p>
           </div>
-
-          {/* Navigation Arrows */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-shadow duration-200 z-10"
-          >
-            <ChevronLeft className="h-6 w-6 text-gray-700" />
-          </button>
-          
-          <button
-            onClick={nextSlide}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-shadow duration-200 z-10"
-          >
-            <ChevronRight className="h-6 w-6 text-gray-700" />
-          </button>
-
-          {/* Dots Indicator */}
-          <div className="flex justify-center mt-8 space-x-2">
-            {mockFeaturedProducts.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                  index === currentIndex ? 'bg-blue-600' : 'bg-gray-300'
-                }`}
-              />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-lg shadow-md p-4 animate-pulse">
+                <div className="bg-gray-200 h-48 rounded-lg mb-4"></div>
+                <div className="bg-gray-200 h-4 rounded mb-2"></div>
+                <div className="bg-gray-200 h-4 rounded mb-2"></div>
+                <div className="bg-gray-200 h-6 rounded mb-4"></div>
+                <div className="bg-gray-200 h-10 rounded"></div>
+              </div>
             ))}
           </div>
         </div>
+      </section>
+    )
+  }
 
-        {/* View All Products Button */}
-        <div className="text-center mt-12">
+  if (products.length === 0) {
+    return (
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+            <p className="text-gray-600">No featured products available at the moment.</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  const visibleProducts = products.slice(currentIndex, currentIndex + 4)
+
+  return (
+    <section className="py-16 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between mb-12">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+            <p className="text-gray-600">Handpicked products you&apos;ll love</p>
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={prevSlide}
+              className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+              disabled={currentIndex === 0}
+            >
+              <ChevronLeft className="w-5 h-5 text-gray-600" />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+              disabled={currentIndex + 4 >= products.length}
+            >
+              <ChevronRight className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {visibleProducts.map((product) => (
+            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+              <Link href={`/product/${product.slug}`}>
+                <div className="relative">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-48 object-cover"
+                  />
+                  {product.originalPrice && product.originalPrice > product.price && (
+                    <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
+                      {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                    </div>
+                  )}
+                  {!product.inStock && (
+                    <div className="absolute top-2 right-2 bg-gray-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
+                      Out of Stock
+                    </div>
+                  )}
+                </div>
+              </Link>
+              
+              <div className="p-4">
+                <Link href={`/product/${product.slug}`}>
+                  <h3 className="font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+                    {product.name}
+                  </h3>
+                </Link>
+                
+                <div className="flex items-center mb-2">
+                  {product.rating && (
+                    <>
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < Math.floor(product.rating!) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm text-gray-600 ml-2">
+                        ({product.reviewCount})
+                      </span>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xl font-bold text-gray-900">${product.price}</span>
+                    {product.originalPrice && product.originalPrice > product.price && (
+                      <span className="text-sm text-gray-500 line-through">${product.originalPrice}</span>
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
+                    product.inStock
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                  disabled={!product.inStock}
+                >
+                  <ShoppingCart className="w-4 h-4 inline mr-2" />
+                  {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-8">
           <Link
             href="/products"
-            className="inline-flex items-center px-8 py-4 bg-gray-900 text-white font-semibold rounded-lg text-lg hover:bg-gray-800 transition-colors duration-200"
+            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
           >
             View All Products
-            <ChevronRight className="ml-2 h-5 w-5" />
+            <ChevronRight className="w-4 h-4 ml-2" />
           </Link>
         </div>
       </div>

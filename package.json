@@ -10,6 +10,7 @@
     "db:test": "tsx -e \"import('./src/lib/db').then(db => db.query('SELECT NOW()').then(() => console.log('Database connection successful!')).catch(console.error))\"",
     "db:seed": "tsx scripts/seed.ts",
     "db:migrate": "tsx scripts/migrate.ts",
+    "db:cleanup": "tsx scripts/cleanup.ts",
     "db:fetch-admin": "tsx scripts/fetch-admin.ts"
   },
   "dependencies": {

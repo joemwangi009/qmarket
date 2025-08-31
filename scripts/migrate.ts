@@ -26,16 +26,35 @@ async function createTables() {
         slug VARCHAR(255) UNIQUE NOT NULL,
         description TEXT,
         price DECIMAL(10,2) NOT NULL,
+        original_price DECIMAL(10,2),
+        image VARCHAR(500) NOT NULL,
         category VARCHAR(100),
-        inventory INTEGER DEFAULT 0,
+        tags TEXT[],
+        in_stock BOOLEAN DEFAULT true,
+        rating DECIMAL(3,2) DEFAULT 0,
+        review_count INTEGER DEFAULT 0,
+        featured BOOLEAN DEFAULT false,
         status VARCHAR(50) DEFAULT 'active',
-        images TEXT[],
-        specifications JSONB,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `)
     console.log('✓ Products table created')
+
+    // Create categories table
+    await query(`
+      CREATE TABLE IF NOT EXISTS categories (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        slug VARCHAR(255) UNIQUE NOT NULL,
+        image VARCHAR(500),
+        parent_id UUID REFERENCES categories(id),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+    console.log('✓ Categories table created')
 
     // Create orders table
     await query(`
@@ -108,6 +127,9 @@ async function createTables() {
     await query('CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)')
     await query('CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)')
     await query('CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug)')
+    await query('CREATE INDEX IF NOT EXISTS idx_products_featured ON products(featured)')
+    await query('CREATE INDEX IF NOT EXISTS idx_products_in_stock ON products(in_stock)')
+    await query('CREATE INDEX IF NOT EXISTS idx_categories_slug ON categories(slug)')
     await query('CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id)')
     await query('CREATE INDEX IF NOT EXISTS idx_payments_order_id ON payments(order_id)')
     await query('CREATE INDEX IF NOT EXISTS idx_payments_transaction_hash ON payments(transaction_hash)')
@@ -120,4 +142,4 @@ async function createTables() {
   }
 }
 
-createTables() 
+createTables()

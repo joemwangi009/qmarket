@@ -5,150 +5,261 @@ async function seedDatabase() {
   try {
     console.log('Starting database seeding...')
 
-    // Insert sample products
+    // Clear existing data
+    await query('DELETE FROM order_items')
+    await query('DELETE FROM payments')
+    await query('DELETE FROM shipping_addresses')
+    await query('DELETE FROM orders')
+    await query('DELETE FROM products')
+    await query('DELETE FROM categories')
+    await query('DELETE FROM users')
+    console.log('✓ Existing data cleared')
+
+    // Create admin user
+    const adminUser = await query(`
+      INSERT INTO users (email, password_hash, role) 
+      VALUES ($1, $2, $3) 
+      RETURNING id
+    `, ['admin@qmarket.com', 'admin_hash_placeholder', 'admin'])
+    console.log('✓ Admin user created')
+
+    // Create categories
+    const categories = [
+      { name: 'Electronics', description: 'Latest gadgets and electronic devices', slug: 'electronics', image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop' },
+      { name: 'Fashion', description: 'Trendy clothing and accessories', slug: 'fashion', image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop' },
+      { name: 'Home & Garden', description: 'Everything for your home and garden', slug: 'home-garden', image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop' },
+      { name: 'Sports & Outdoors', description: 'Equipment for active lifestyle', slug: 'sports-outdoors', image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop' },
+      { name: 'Beauty & Health', description: 'Personal care and wellness products', slug: 'beauty-health', image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop' },
+      { name: 'Books & Media', description: 'Books, movies, and digital content', slug: 'books-media', image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop' }
+    ]
+
+    for (const category of categories) {
+      await query(`
+        INSERT INTO categories (name, description, slug, image) 
+        VALUES ($1, $2, $3, $4)
+      `, [category.name, category.description, category.slug, category.image])
+    }
+    console.log('✓ Categories created')
+
+    // Create products
     const products = [
+      // Electronics
       {
-        name: 'Premium Wireless Headphones',
-        slug: 'premium-wireless-headphones',
-        description: 'High-quality wireless headphones with noise cancellation and premium sound quality.',
-        price: 299.99,
-        category: 'Electronics',
-        inventory: 45,
-        specifications: {
-          'Bluetooth Version': '5.0',
-          'Battery Life': '30 hours',
-          'Noise Cancellation': 'Active',
-          'Driver Size': '40mm'
-        }
-      },
-      {
-        name: 'Mechanical Keyboard',
-        slug: 'mechanical-keyboard',
-        description: 'Professional mechanical keyboard with customizable RGB lighting and premium switches.',
-        price: 159.99,
-        category: 'Electronics',
-        inventory: 23,
-        specifications: {
-          'Switch Type': 'Cherry MX Brown',
-          'Layout': 'Full-size',
-          'Backlighting': 'RGB',
-          'Connectivity': 'USB-C'
-        }
-      },
-      {
-        name: 'Designer Backpack',
-        slug: 'designer-backpack',
-        description: 'Stylish and functional backpack perfect for everyday use and travel.',
+        name: 'Wireless Bluetooth Headphones',
+        slug: 'wireless-bluetooth-headphones',
+        description: 'Premium noise-canceling wireless headphones with 30-hour battery life',
         price: 89.99,
-        category: 'Fashion',
-        inventory: 67,
-        specifications: {
-          'Material': 'Water-resistant canvas',
-          'Capacity': '25L',
-          'Compartments': 'Multiple',
-          'Laptop Sleeve': 'Yes'
-        }
+        originalPrice: 129.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Electronics',
+        tags: ['wireless', 'bluetooth', 'noise-canceling', 'headphones'],
+        inStock: true,
+        rating: 4.8,
+        reviewCount: 1247,
+        featured: true
       },
       {
-        name: 'Running Shoes',
-        slug: 'running-shoes',
-        description: 'Professional running shoes with advanced cushioning and breathable design.',
-        price: 129.99,
-        category: 'Sports & Fitness',
-        inventory: 34,
-        specifications: {
-          'Type': 'Road running',
-          'Cushioning': 'High',
-          'Weight': '280g',
-          'Drop': '8mm'
-        }
+        name: 'Smart Fitness Watch',
+        slug: 'smart-fitness-watch',
+        description: 'Advanced fitness tracker with heart rate monitoring and GPS',
+        price: 199.99,
+        originalPrice: 299.99,
+        image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Electronics',
+        tags: ['smartwatch', 'fitness', 'health', 'tracking'],
+        inStock: true,
+        rating: 4.6,
+        reviewCount: 892,
+        featured: true
+      },
+      {
+        name: 'Portable Bluetooth Speaker',
+        slug: 'portable-bluetooth-speaker',
+        description: 'Waterproof portable speaker with 360-degree sound',
+        price: 59.99,
+        originalPrice: 89.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Electronics',
+        tags: ['portable', 'bluetooth', 'speaker', 'waterproof'],
+        inStock: true,
+        rating: 4.7,
+        reviewCount: 1563,
+        featured: false
+      },
+      {
+        name: 'Wireless Charging Pad',
+        slug: 'wireless-charging-pad',
+        description: 'Fast wireless charging pad compatible with all Qi-enabled devices',
+        price: 29.99,
+        originalPrice: 49.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Electronics',
+        tags: ['wireless', 'charging', 'qi', 'fast-charging'],
+        inStock: true,
+        rating: 4.5,
+        reviewCount: 734,
+        featured: false
+      },
+      {
+        name: 'USB-C Power Bank',
+        slug: 'usb-c-power-bank',
+        description: '20000mAh power bank with USB-C and wireless charging',
+        price: 49.99,
+        originalPrice: 79.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Electronics',
+        tags: ['power-bank', 'usb-c', 'wireless-charging', 'portable'],
+        inStock: true,
+        rating: 4.4,
+        reviewCount: 567,
+        featured: false
+      },
+      {
+        name: 'Wireless Gaming Mouse',
+        slug: 'wireless-gaming-mouse',
+        description: 'High-precision wireless gaming mouse with RGB lighting',
+        price: 79.99,
+        originalPrice: 119.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Electronics',
+        tags: ['gaming', 'wireless', 'rgb', 'precision'],
+        inStock: true,
+        rating: 4.9,
+        reviewCount: 2103,
+        featured: true
+      },
+      // Fashion
+      {
+        name: 'Premium Cotton T-Shirt',
+        slug: 'premium-cotton-tshirt',
+        description: '100% organic cotton t-shirt with modern fit',
+        price: 29.99,
+        originalPrice: 39.99,
+        image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Fashion',
+        tags: ['cotton', 'organic', 'tshirt', 'casual'],
+        inStock: true,
+        rating: 4.6,
+        reviewCount: 445,
+        featured: false
+      },
+      {
+        name: 'Designer Jeans',
+        slug: 'designer-jeans',
+        description: 'Premium denim jeans with perfect fit and style',
+        price: 89.99,
+        originalPrice: 129.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Fashion',
+        tags: ['jeans', 'denim', 'designer', 'premium'],
+        inStock: true,
+        rating: 4.7,
+        reviewCount: 678,
+        featured: false
+      },
+      // Home & Garden
+      {
+        name: 'Smart LED Light Bulb',
+        slug: 'smart-led-light-bulb',
+        description: 'WiFi-enabled smart bulb with 16 million colors',
+        price: 15.99,
+        originalPrice: 24.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Home & Garden',
+        tags: ['smart', 'led', 'wifi', 'colors'],
+        inStock: true,
+        rating: 4.3,
+        reviewCount: 234,
+        featured: false
+      },
+      {
+        name: 'Bamboo Cutting Board',
+        slug: 'bamboo-cutting-board',
+        description: 'Eco-friendly bamboo cutting board with juice groove',
+        price: 32.99,
+        originalPrice: 44.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Home & Garden',
+        tags: ['bamboo', 'cutting-board', 'eco-friendly', 'kitchen'],
+        inStock: true,
+        rating: 4.8,
+        reviewCount: 156,
+        featured: false
+      },
+      // Sports & Outdoors
+      {
+        name: 'Running Shoes Elite',
+        slug: 'running-shoes-elite',
+        description: 'Professional running shoes with advanced cushioning',
+        price: 189.99,
+        originalPrice: 249.99,
+        image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Sports & Outdoors',
+        tags: ['running', 'shoes', 'professional', 'cushioning'],
+        inStock: true,
+        rating: 4.7,
+        reviewCount: 892,
+        featured: true
+      },
+      {
+        name: 'Yoga Mat Premium',
+        slug: 'yoga-mat-premium',
+        description: 'Non-slip yoga mat with alignment lines',
+        price: 45.99,
+        originalPrice: 59.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Sports & Outdoors',
+        tags: ['yoga', 'mat', 'non-slip', 'alignment'],
+        inStock: true,
+        rating: 4.5,
+        reviewCount: 334,
+        featured: false
+      },
+      // Beauty & Health
+      {
+        name: 'Organic Face Serum',
+        slug: 'organic-face-serum',
+        description: 'Natural anti-aging serum with vitamin C and hyaluronic acid',
+        price: 49.99,
+        originalPrice: 69.99,
+        image: 'https://images.pexels.com/photos/437037/pexels-photo-437037.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Beauty & Health',
+        tags: ['organic', 'serum', 'anti-aging', 'vitamin-c'],
+        inStock: true,
+        rating: 4.9,
+        reviewCount: 567,
+        featured: true
+      },
+      {
+        name: 'Electric Toothbrush',
+        slug: 'electric-toothbrush',
+        description: 'Smart electric toothbrush with Bluetooth connectivity',
+        price: 79.99,
+        originalPrice: 99.99,
+        image: 'https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&fit=crop',
+        category: 'Beauty & Health',
+        tags: ['electric', 'toothbrush', 'smart', 'bluetooth'],
+        inStock: true,
+        rating: 4.6,
+        reviewCount: 445,
+        featured: false
       }
     ]
 
     for (const product of products) {
       await query(`
-        INSERT INTO products (name, slug, description, price, category, inventory, specifications)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        ON CONFLICT (slug) DO NOTHING
-      `, [product.name, product.slug, product.description, product.price, product.category, product.inventory, product.specifications])
+        INSERT INTO products (name, slug, description, price, original_price, image, category, tags, in_stock, rating, review_count, featured) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      `, [
+        product.name, product.slug, product.description, product.price, 
+        product.originalPrice, product.image, product.category, product.tags,
+        product.inStock, product.rating, product.reviewCount, product.featured
+      ])
     }
-    console.log('✓ Sample products inserted')
-
-    // Insert sample user (admin)
-    await query(`
-      INSERT INTO users (email, role)
-      VALUES ('admin@qmarket.com', 'admin')
-      ON CONFLICT (email) DO NOTHING
-    `)
-    console.log('✓ Admin user created')
-
-    // Insert sample orders
-    const orders = [
-      {
-        id: 'ORD-001',
-        status: 'Delivered',
-        subtotal: 274.99,
-        shipping: 0,
-        tax: 25.00,
-        total: 299.99,
-        payment_method: 'BTC'
-      },
-      {
-        id: 'ORD-002',
-        status: 'Shipped',
-        subtotal: 159.99,
-        shipping: 0,
-        tax: 12.80,
-        total: 172.79,
-        payment_method: 'ETH'
-      }
-    ]
-
-    for (const order of orders) {
-      await query(`
-        INSERT INTO orders (id, status, subtotal, shipping, tax, total, payment_method)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        ON CONFLICT (id) DO NOTHING
-      `, [order.id, order.status, order.subtotal, order.shipping, order.tax, order.total, order.payment_method])
-    }
-    console.log('✓ Sample orders created')
-
-    // Insert sample order items
-    await query(`
-      INSERT INTO order_items (order_id, name, quantity, price)
-      VALUES 
-        ('ORD-001', 'Premium Wireless Headphones', 1, 274.99),
-        ('ORD-002', 'Mechanical Keyboard', 1, 159.99)
-      ON CONFLICT DO NOTHING
-    `)
-    console.log('✓ Sample order items created')
-
-    // Insert sample shipping addresses
-    await query(`
-      INSERT INTO shipping_addresses (order_id, first_name, last_name, address, city, state, zip_code, country)
-      VALUES 
-        ('ORD-001', 'John', 'Doe', '123 Main St', 'New York', 'NY', '10001', 'US'),
-        ('ORD-002', 'Jane', 'Smith', '456 Oak Ave', 'Los Angeles', 'CA', '90210', 'US')
-      ON CONFLICT DO NOTHING
-    `)
-    console.log('✓ Sample shipping addresses created')
-
-    // Insert sample payments
-    await query(`
-      INSERT INTO payments (order_id, transaction_hash, amount, currency, status, gateway)
-      VALUES 
-        ('ORD-001', '0x1234567890abcdef1234567890abcdef12345678', 299.99, 'USD', 'completed', 'nowpayments'),
-        ('ORD-002', '0xabcdef1234567890abcdef1234567890abcdef12', 172.79, 'USD', 'completed', 'nowpayments')
-      ON CONFLICT DO NOTHING
-    `)
-    console.log('✓ Sample payments created')
+    console.log('✓ Products created')
 
     console.log('🎉 Database seeding completed successfully!')
-    console.log('📊 Sample data includes:')
-    console.log('   - 4 products across different categories')
-    console.log('   - 1 admin user (admin@qmarket.com)')
-    console.log('   - 2 sample orders with items and addresses')
-    console.log('   - Sample payment records')
+    console.log(`Created ${categories.length} categories and ${products.length} products`)
   } catch (error) {
     console.error('❌ Seeding failed:', error)
     process.exit(1)
