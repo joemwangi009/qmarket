@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useAdminAuth } from '@/contexts/AdminAuthContext'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
@@ -13,7 +14,9 @@ import {
   CreditCard, 
   Settings,
   LogOut,
-  Shield
+  Shield,
+  Home,
+  Store
 } from 'lucide-react'
 
 export default function AdminLayout({
@@ -65,62 +68,70 @@ export default function AdminLayout({
             <div className="flex items-center space-x-3 mb-6">
               <Shield className="h-8 w-8 text-blue-600" />
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
+                <h1 className="text-xl font-bold text-gray-900">QMarket Admin</h1>
                 <p className="text-sm text-gray-600">Welcome, {user.email}</p>
               </div>
             </div>
 
             <nav className="space-y-2">
-              <a
+              <Link
                 href="/admin"
                 className="flex items-center space-x-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <BarChart3 className="h-5 w-5" />
-                <span>Analytics</span>
-              </a>
+                <span>Dashboard</span>
+              </Link>
               
-              <a
+              <Link
                 href="/admin/products"
                 className="flex items-center space-x-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <Package className="h-5 w-5" />
                 <span>Products</span>
-              </a>
+              </Link>
               
-              <a
+              <Link
                 href="/admin/orders"
                 className="flex items-center space-x-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <ShoppingCart className="h-5 w-5" />
                 <span>Orders</span>
-              </a>
+              </Link>
               
-              <a
+              <Link
                 href="/admin/customers"
                 className="flex items-center space-x-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <Users className="h-5 w-5" />
                 <span>Customers</span>
-              </a>
+              </Link>
               
-              <a
+              <Link
                 href="/admin/payments"
                 className="flex items-center space-x-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <CreditCard className="h-5 w-5" />
                 <span>Payments</span>
-              </a>
+              </Link>
               
-              <a
+              <Link
                 href="/admin/settings"
                 className="flex items-center space-x-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <Settings className="h-5 w-5" />
                 <span>Settings</span>
-              </a>
+              </Link>
             </nav>
 
-            <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="mt-8 pt-6 border-t border-gray-200 space-y-2">
+              <Link
+                href="/"
+                className="flex items-center space-x-3 px-3 py-2 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors w-full"
+              >
+                <Home className="h-5 w-5" />
+                <span>View Store</span>
+              </Link>
+              
               <button
                 onClick={() => signOut()}
                 className="flex items-center space-x-3 px-3 py-2 text-red-600 rounded-lg hover:bg-red-50 transition-colors w-full"
