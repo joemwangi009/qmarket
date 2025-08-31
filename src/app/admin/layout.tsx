@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAdminAuth } from '@/contexts/AdminAuthContext'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
 import { 
@@ -16,35 +16,22 @@ import {
   Shield
 } from 'lucide-react'
 
-// Mock admin user - in production, this would come from the database
-const mockAdminUser = {
-  id: 'admin-1',
-  email: 'admin@qmarket.com',
-  role: 'admin',
-  name: 'Admin User'
-}
-
-// Mock admin check - in production, this would verify against the database
-const isAdmin = (user: { email?: string; role?: string } | null) => {
-  return user && (user.email === 'admin@qmarket.com' || user.role === 'admin')
-}
-
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const { user, signOut } = useAuth()
+  const { user, signOut } = useAdminAuth()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     if (!user) {
-      router.push('/auth/signin')
+      router.push('/admin/login')
       return
     }
 
-    if (!isAdmin(user)) {
+    if (!user.isAdmin) {
       router.push('/dashboard')
       return
     }
@@ -63,7 +50,7 @@ export default function AdminLayout({
     )
   }
 
-  if (!user || !isAdmin(user)) {
+  if (!user || !user.isAdmin) {
     return null
   }
 
@@ -79,7 +66,7 @@ export default function AdminLayout({
               <Shield className="h-8 w-8 text-blue-600" />
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
-                <p className="text-sm text-gray-600">Welcome, {mockAdminUser.name}</p>
+                <p className="text-sm text-gray-600">Welcome, {user.email}</p>
               </div>
             </div>
 
