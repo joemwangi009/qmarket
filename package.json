@@ -8,10 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "db:test": "tsx -e \"import('./src/lib/db').then(db => db.query('SELECT NOW()').then(() => console.log('Database connection successful!')).catch(console.error))\"",
-    "db:seed": "tsx scripts/seed.ts",
-    "db:migrate": "tsx scripts/migrate.ts",
-    "db:cleanup": "tsx scripts/cleanup.ts",
-    "db:fetch-admin": "tsx scripts/fetch-admin.ts"
+    "db:seed": "tsx tools/seed.ts",
+    "db:migrate": "tsx tools/migrate.ts",
+    "db:cleanup": "tsx tools/cleanup.ts",
+    "db:fetch-admin": "tsx tools/fetch-admin.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

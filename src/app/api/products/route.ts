@@ -62,7 +62,23 @@ export async function GET(request: NextRequest) {
     const result = await query(sql, params)
     
     // Transform database fields to match our Product interface
-    const products = result.rows.map(row => ({
+    const products = (result.rows as Array<{
+      id: string
+      name: string
+      slug: string
+      description: string
+      price: string
+      original_price: string | null
+      image: string
+      category: string
+      tags: string[] | null
+      in_stock: boolean
+      rating: string | null
+      review_count: number | null
+      featured: boolean
+      created_at: Date
+      updated_at: Date
+    }>).map(row => ({
       id: row.id,
       name: row.name,
       slug: row.slug,

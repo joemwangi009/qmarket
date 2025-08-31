@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     const result = await query(sql, params)
     
     // Transform database fields to match our Category interface
-    const categories = result.rows.map((row: {
+    const categories = (result.rows as Array<{
       id: string
       name: string
       description: string
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
       parent_id: string | null
       created_at: Date
       updated_at: Date
-    }) => ({
+    }>).map(row => ({
       id: row.id,
       name: row.name,
       description: row.description,

@@ -1,0 +1,19 @@
+# Exclude scripts from Vercel build
+scripts/
+*.bat
+*.ps1
+*.txt
+*.md
+.env.local
+.env.example
+.env.template
+
+# Exclude development files
+install-deps.bat
+install-deps.ps1
+STEPS_TO_FIX_STYLES.txt
+SUPABASE_SETUP.md
+MAINTENANCE_GUIDE.md
+TECHNICAL_IMPLEMENTATION.md
+DOCUMENTATION.md
+env-template.txt 
