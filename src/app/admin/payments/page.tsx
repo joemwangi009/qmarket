@@ -139,7 +139,7 @@ export default function AdminPayments() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Payment Gateway Configuration</h1>
           <p className="text-gray-600 mt-2">
-            Configure and manage your crypto payment gateways
+            Configure and manage your payment gateways including credit cards, PayPal, and crypto
           </p>
         </div>
         

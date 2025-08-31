@@ -210,12 +210,12 @@ export default function AdminOrders() {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Methods</option>
-              <option value="BTC">Bitcoin</option>
-              <option value="ETH">Ethereum</option>
-              <option value="USDT">USDT</option>
-              <option value="USDC">USDC</option>
-              <option value="BNB">BNB</option>
-              <option value="LTC">Litecoin</option>
+              <option value="credit_card">Credit Card</option>
+              <option value="debit_card">Debit Card</option>
+              <option value="paypal">PayPal</option>
+              <option value="bank_transfer">Bank Transfer</option>
+              <option value="crypto">Crypto Payment</option>
+              <option value="cash_on_delivery">Cash on Delivery</option>
             </select>
           </div>
           
