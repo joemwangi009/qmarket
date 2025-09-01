@@ -94,9 +94,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     preOrderPrice: product?.preOrderPrice || 0,
   })
 
-  const [images, setImages] = useState<string[]>(product?.images || [])
-  const [variations, setVariations] = useState<ProductVariation[]>(product?.variations || [])
-  const [attributes, setAttributes] = useState<ProductAttribute[]>(product?.attributes || [])
+  const [images, setImages] = useState<string[]>((product?.images as string[]) || [])
+  const [variations, setVariations] = useState<ProductVariation[]>((product?.variations as ProductVariation[]) || [])
+  const [attributes, setAttributes] = useState<ProductAttribute[]>((product?.attributes as ProductAttribute[]) || [])
   const [activeTab, setActiveTab] = useState('basic')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
