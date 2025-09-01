@@ -631,6 +631,17 @@ export default function AdminProducts() {
             const newProducts: Product[] = uploadedProducts.map((product, index) => ({
               ...product,
               id: `bulk-${Date.now()}-${index}`,
+              dimensions: {
+                length: product.length || 0,
+                width: product.width || 0,
+                height: product.height || 0
+              },
+              seo: {
+                metaTitle: product.metaTitle || product.title,
+                metaDescription: product.metaDescription || product.description,
+                slug: product.slug || product.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                keywords: product.keywords || []
+              },
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString()
             })) as Product[]
