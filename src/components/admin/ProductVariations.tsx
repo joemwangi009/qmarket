@@ -5,10 +5,7 @@ import {
   Plus, 
   Trash2, 
   Upload, 
-  Image as ImageIcon,
-  DollarSign,
-  Package,
-  Eye
+  Package
 } from 'lucide-react'
 
 interface ProductVariation {
@@ -37,7 +34,7 @@ export const ProductVariations: React.FC<ProductVariationsProps> = ({
   variations, 
   onChange 
 }) => {
-  const [activeVariation, setActiveVariation] = useState<string | null>(null)
+
 
   const addVariation = () => {
     const newVariation: ProductVariation = {
@@ -49,7 +46,7 @@ export const ProductVariations: React.FC<ProductVariationsProps> = ({
     onChange([...variations, newVariation])
   }
 
-  const updateVariation = (id: string, field: string, value: any) => {
+  const updateVariation = (id: string, field: string, value: unknown) => {
     onChange(variations.map(v => 
       v.id === id ? { ...v, [field]: value } : v
     ))
@@ -77,7 +74,7 @@ export const ProductVariations: React.FC<ProductVariationsProps> = ({
     ))
   }
 
-  const updateVariationOption = (variationId: string, optionId: string, field: string, value: any) => {
+  const updateVariationOption = (variationId: string, optionId: string, field: string, value: unknown) => {
     onChange(variations.map(v => 
       v.id === variationId 
         ? {

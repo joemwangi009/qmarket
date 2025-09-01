@@ -54,6 +54,7 @@ interface Product {
   attributes?: Record<string, string>
   createdAt: string
   updatedAt: string
+  [key: string]: unknown // Allow additional properties
 }
 
 const mockProducts: Product[] = [
@@ -592,8 +593,8 @@ export default function AdminProducts() {
         <ProductForm
           mode="create"
           onSave={(productData) => {
-            const newProduct = {
-              ...productData,
+            const newProduct: Product = {
+              ...productData as Product,
               id: Date.now().toString(),
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString()
@@ -611,7 +612,7 @@ export default function AdminProducts() {
           product={editingProduct}
           onSave={(updatedProduct) => {
             setProducts(products.map(p => 
-              p.id === editingProduct.id ? updatedProduct : p
+              p.id === editingProduct.id ? (updatedProduct as Product) : p
             ))
             setShowEditModal(false)
             setEditingProduct(null)
@@ -627,12 +628,12 @@ export default function AdminProducts() {
       {showBulkUpload && (
         <BulkUpload
           onUpload={(uploadedProducts) => {
-            const newProducts = uploadedProducts.map((product, index) => ({
+            const newProducts: Product[] = uploadedProducts.map((product, index) => ({
               ...product,
               id: `bulk-${Date.now()}-${index}`,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString()
-            }))
+            })) as Product[]
             setProducts([...products, ...newProducts])
             setShowBulkUpload(false)
           }}

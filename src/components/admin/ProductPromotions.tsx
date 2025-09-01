@@ -27,7 +27,7 @@ interface Promotion {
 interface PromotionCondition {
   id: string
   type: 'minimum_amount' | 'minimum_quantity' | 'specific_categories' | 'specific_brands'
-  value: any
+  value: string | number
 }
 
 interface ProductPromotionsProps {
@@ -37,12 +37,9 @@ interface ProductPromotionsProps {
 }
 
 export const ProductPromotions: React.FC<ProductPromotionsProps> = ({
-  productId,
   promotions,
   onSave
 }) => {
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [editingPromotion, setEditingPromotion] = useState<Promotion | null>(null)
 
   const addPromotion = () => {
     const newPromotion: Promotion = {
@@ -59,7 +56,7 @@ export const ProductPromotions: React.FC<ProductPromotionsProps> = ({
     onSave([...promotions, newPromotion])
   }
 
-  const updatePromotion = (id: string, field: string, value: any) => {
+  const updatePromotion = (id: string, field: string, value: unknown) => {
     onSave(promotions.map(p => 
       p.id === id ? { ...p, [field]: value } : p
     ))
@@ -83,7 +80,7 @@ export const ProductPromotions: React.FC<ProductPromotionsProps> = ({
     ))
   }
 
-  const updateCondition = (promotionId: string, conditionId: string, field: string, value: any) => {
+  const updateCondition = (promotionId: string, conditionId: string, field: string, value: unknown) => {
     onSave(promotions.map(p => 
       p.id === promotionId 
         ? {
