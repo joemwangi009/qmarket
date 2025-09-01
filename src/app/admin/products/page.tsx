@@ -17,6 +17,9 @@ import {
   Image as ImageIcon,
   MoreHorizontal
 } from 'lucide-react'
+import { ProductForm } from '@/components/admin/ProductForm'
+import { ProductEdit } from '@/components/admin/ProductEdit'
+import { BulkUpload } from '@/components/admin/BulkUpload'
 
 // Mock product data - in production, this would come from the database
 interface Product {
@@ -135,6 +138,8 @@ export default function AdminProducts() {
   const [selectedBrand, setSelectedBrand] = useState('all')
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showBulkUpload, setShowBulkUpload] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
 
   const categories = ['Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Books', 'Toys']
@@ -482,7 +487,13 @@ export default function AdminProducts() {
                         <button className="text-blue-600 hover:text-blue-900">
                           <Eye className="h-4 w-4" />
                         </button>
-                        <button className="text-green-600 hover:text-green-900">
+                        <button 
+                          onClick={() => {
+                            setEditingProduct(product)
+                            setShowEditModal(true)
+                          }}
+                          className="text-green-600 hover:text-green-900"
+                        >
                           <Edit className="h-4 w-4" />
                         </button>
                         <button className="text-red-600 hover:text-red-900">
@@ -576,36 +587,57 @@ export default function AdminProducts() {
         </div>
       </div>
 
-      {/* TODO: Add Product Creation Modal */}
+      {/* Product Creation Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
-            <h2 className="text-xl font-bold mb-4">Add New Product</h2>
-            <p className="text-gray-600 mb-4">Product creation modal will be implemented here</p>
-            <button
-              onClick={() => setShowCreateModal(false)}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <ProductForm
+          mode="create"
+          onSave={(productData) => {
+            const newProduct = {
+              ...productData,
+              id: Date.now().toString(),
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+            setProducts([...products, newProduct])
+            setShowCreateModal(false)
+          }}
+          onCancel={() => setShowCreateModal(false)}
+        />
       )}
 
-      {/* TODO: Add Bulk Upload Modal */}
+      {/* Product Edit Modal */}
+      {showEditModal && editingProduct && (
+        <ProductEdit
+          product={editingProduct}
+          onSave={(updatedProduct) => {
+            setProducts(products.map(p => 
+              p.id === editingProduct.id ? updatedProduct : p
+            ))
+            setShowEditModal(false)
+            setEditingProduct(null)
+          }}
+          onCancel={() => {
+            setShowEditModal(false)
+            setEditingProduct(null)
+          }}
+        />
+      )}
+
+      {/* Bulk Upload Modal */}
       {showBulkUpload && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
-            <h2 className="text-xl font-bold mb-4">Bulk Upload Products</h2>
-            <p className="text-gray-600 mb-4">Bulk upload modal will be implemented here</p>
-            <button
-              onClick={() => setShowBulkUpload(false)}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <BulkUpload
+          onUpload={(uploadedProducts) => {
+            const newProducts = uploadedProducts.map((product, index) => ({
+              ...product,
+              id: `bulk-${Date.now()}-${index}`,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }))
+            setProducts([...products, ...newProducts])
+            setShowBulkUpload(false)
+          }}
+          onClose={() => setShowBulkUpload(false)}
+        />
       )}
     </div>
   )
