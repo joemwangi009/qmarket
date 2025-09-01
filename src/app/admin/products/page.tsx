@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   Plus, 
   Search, 
@@ -57,82 +57,11 @@ interface Product {
   [key: string]: unknown // Allow additional properties
 }
 
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    title: 'Premium Wireless Headphones',
-    description: 'High-quality wireless headphones with noise cancellation',
-    price: 299.99,
-    originalPrice: 399.99,
-    sku: 'WH-001',
-    stock: 45,
-    minStock: 10,
-    weight: 0.5,
-    dimensions: { length: 20, width: 15, height: 8 },
-    brand: 'AudioTech',
-    category: 'Electronics',
-    subcategory: 'Audio',
-    tags: ['wireless', 'noise-cancelling', 'premium'],
-    images: ['/images/headphones-1.jpg', '/images/headphones-2.jpg'],
-    status: 'active',
-    featured: true,
-    seo: {
-      metaTitle: 'Premium Wireless Headphones - Best Audio Quality',
-      metaDescription: 'Experience premium sound with our wireless noise-cancelling headphones',
-      slug: 'premium-wireless-headphones',
-      keywords: ['wireless headphones', 'noise cancelling', 'premium audio']
-    },
-    variations: {
-      color: ['Black', 'White', 'Blue'],
-      size: ['One Size']
-    },
-    attributes: {
-      material: 'Premium Plastic & Metal',
-      batteryLife: '30 hours',
-      connectivity: 'Bluetooth 5.0'
-    },
-    createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-20T14:30:00Z'
-  },
-  {
-    id: '2',
-    title: 'Mechanical Gaming Keyboard',
-    description: 'RGB mechanical keyboard with customizable switches',
-    price: 159.99,
-    sku: 'KB-002',
-    stock: 23,
-    minStock: 5,
-    weight: 1.2,
-    dimensions: { length: 45, width: 15, height: 3 },
-    brand: 'GameTech',
-    category: 'Electronics',
-    subcategory: 'Gaming',
-    tags: ['mechanical', 'gaming', 'rgb', 'customizable'],
-    images: ['/images/keyboard-1.jpg'],
-    status: 'active',
-    featured: false,
-    seo: {
-      metaTitle: 'Mechanical Gaming Keyboard - RGB Customizable',
-      metaDescription: 'Professional gaming keyboard with mechanical switches and RGB lighting',
-      slug: 'mechanical-gaming-keyboard',
-      keywords: ['mechanical keyboard', 'gaming', 'rgb', 'customizable']
-    },
-    variations: {
-      color: ['Black', 'White'],
-      switches: ['Blue', 'Red', 'Brown']
-    },
-    attributes: {
-      material: 'Aluminum & ABS',
-      switchType: 'Cherry MX',
-      backlight: 'RGB'
-    },
-    createdAt: '2024-01-10T09:00:00Z',
-    updatedAt: '2024-01-18T16:45:00Z'
-  }
-]
+
 
 export default function AdminProducts() {
-  const [products, setProducts] = useState<Product[]>(mockProducts)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
@@ -141,6 +70,126 @@ export default function AdminProducts() {
   const [showBulkUpload, setShowBulkUpload] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+
+  // Fetch products from database
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/admin/products')
+      if (response.ok) {
+        const result = await response.json()
+        setProducts(result.data || [])
+      } else {
+        console.error('Failed to fetch products')
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const createProduct = async (productData: Record<string, unknown>) => {
+    try {
+      const response = await fetch('/api/admin/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        // Refresh products list
+        await fetchProducts()
+        setShowCreateModal(false)
+        return result
+      } else {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to create product')
+      }
+    } catch (error) {
+      console.error('Error creating product:', error)
+      throw error
+    }
+  }
+
+  const updateProduct = async (productData: Record<string, unknown>) => {
+    try {
+      const response = await fetch('/api/admin/products', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData),
+      })
+
+      if (response.ok) {
+        // Refresh products list
+        await fetchProducts()
+        setShowEditModal(false)
+        setEditingProduct(null)
+        return { success: true }
+      } else {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to update product')
+      }
+    } catch (error) {
+      console.error('Error updating product:', error)
+      throw error
+    }
+  }
+
+  const deleteProduct = async (productId: string) => {
+    try {
+      const response = await fetch(`/api/admin/products?id=${productId}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        // Refresh products list
+        await fetchProducts()
+        return { success: true }
+      } else {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to delete product')
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      throw error
+    }
+  }
+
+  const bulkUploadProducts = async (uploadedProducts: Record<string, unknown>[]) => {
+    try {
+      // Create products one by one
+      const results = []
+      for (const product of uploadedProducts) {
+        try {
+          const result = await createProduct(product)
+          results.push(result)
+        } catch (error) {
+          console.error(`Failed to create product ${product.sku}:`, error)
+          results.push({ success: false, error: error.message, sku: product.sku })
+        }
+      }
+      
+      // Refresh products list
+      await fetchProducts()
+      setShowBulkUpload(false)
+      
+      return results
+    } catch (error) {
+      console.error('Error in bulk upload:', error)
+      throw error
+    }
+  }
+
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
 
   const categories = ['Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Books', 'Toys']
@@ -193,30 +242,40 @@ export default function AdminProducts() {
     }).format(amount)
   }
 
-  const handleBulkAction = (action: string) => {
+  const handleBulkAction = async (action: string) => {
     if (selectedProducts.length === 0) return
     
-    switch (action) {
-      case 'activate':
-        setProducts(products.map(p => 
-          selectedProducts.includes(p.id) ? { ...p, status: 'active' as const } : p
-        ))
-        break
-      case 'deactivate':
-        setProducts(products.map(p => 
-          selectedProducts.includes(p.id) ? { ...p, status: 'inactive' as const } : p
-        ))
-        break
-      case 'delete':
-        setProducts(products.filter(p => !selectedProducts.includes(p.id)))
-        break
-      case 'feature':
-        setProducts(products.map(p => 
-          selectedProducts.includes(p.id) ? { ...p, featured: true } : p
-        ))
-        break
+    try {
+      switch (action) {
+        case 'activate':
+          // Update products in database
+          for (const productId of selectedProducts) {
+            await updateProduct({ id: productId, status: 'active' })
+          }
+          break
+        case 'deactivate':
+          // Update products in database
+          for (const productId of selectedProducts) {
+            await updateProduct({ id: productId, status: 'inactive' })
+          }
+          break
+        case 'delete':
+          // Delete products from database
+          for (const productId of selectedProducts) {
+            await deleteProduct(productId)
+          }
+          break
+        case 'feature':
+          // Update products in database
+          for (const productId of selectedProducts) {
+            await updateProduct({ id: productId, featured: true })
+          }
+          break
+      }
+      setSelectedProducts([])
+    } catch (error) {
+      console.error('Error in bulk action:', error)
     }
-    setSelectedProducts([])
   }
 
   return (
@@ -349,8 +408,36 @@ export default function AdminProducts() {
 
       {/* Products Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+        {loading ? (
+          <div className="p-8 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading products...</p>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="p-8 text-center">
+            <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <Package className="h-8 w-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+            <p className="text-gray-600 mb-4">Get started by creating your first product or uploading products in bulk.</p>
+            <div className="flex items-center justify-center space-x-3">
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Create Product
+              </button>
+              <button
+                onClick={() => setShowBulkUpload(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Bulk Upload
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left">
@@ -511,6 +598,7 @@ export default function AdminProducts() {
             </tbody>
           </table>
         </div>
+        )}
       </div>
 
       {/* Pagination */}
@@ -592,31 +680,16 @@ export default function AdminProducts() {
       {showCreateModal && (
         <ProductForm
           mode="create"
-          onSave={(productData) => {
-            const newProduct: Product = {
-              ...productData as Product,
-              id: Date.now().toString(),
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-            }
-            setProducts([...products, newProduct])
-            setShowCreateModal(false)
-          }}
+          onSave={createProduct}
           onCancel={() => setShowCreateModal(false)}
         />
       )}
 
-      {/* Product Edit Modal */}
+            {/* Product Edit Modal */}
       {showEditModal && editingProduct && (
         <ProductEdit
           product={editingProduct}
-          onSave={(updatedProduct) => {
-            setProducts(products.map(p => 
-              p.id === editingProduct.id ? (updatedProduct as Product) : p
-            ))
-            setShowEditModal(false)
-            setEditingProduct(null)
-          }}
+          onSave={updateProduct}
           onCancel={() => {
             setShowEditModal(false)
             setEditingProduct(null)
@@ -627,27 +700,7 @@ export default function AdminProducts() {
       {/* Bulk Upload Modal */}
       {showBulkUpload && (
         <BulkUpload
-          onUpload={(uploadedProducts) => {
-            const newProducts: Product[] = uploadedProducts.map((product, index) => ({
-              ...product,
-              id: `bulk-${Date.now()}-${index}`,
-              dimensions: {
-                length: product.length || 0,
-                width: product.width || 0,
-                height: product.height || 0
-              },
-              seo: {
-                metaTitle: product.metaTitle || product.title,
-                metaDescription: product.metaDescription || product.description,
-                slug: product.slug || product.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-                keywords: product.keywords || []
-              },
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-            })) as Product[]
-            setProducts([...products, ...newProducts])
-            setShowBulkUpload(false)
-          }}
+          onUpload={bulkUploadProducts}
           onClose={() => setShowBulkUpload(false)}
         />
       )}
