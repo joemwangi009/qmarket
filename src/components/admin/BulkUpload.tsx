@@ -214,6 +214,12 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({ onClose, onUpload }) => 
       }
       
       setProducts(processedProducts)
+      // Automatically select valid products
+      const validIndices = processedProducts
+        .map((product, index) => ({ product, index }))
+        .filter(({ product }) => !product.errors || product.errors.length === 0)
+        .map(({ index }) => index.toString())
+      setSelectedProducts(validIndices)
       setCurrentStep('review')
     } catch (error) {
       console.error('Error processing file:', error)
@@ -273,10 +279,24 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({ onClose, onUpload }) => 
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedProducts(products.map((_, index) => index.toString()))
+      // Select all valid products by default
+      const validIndices = products
+        .map((product, index) => ({ product, index }))
+        .filter(({ product }) => !product.errors || product.errors.length === 0)
+        .map(({ index }) => index.toString())
+      setSelectedProducts(validIndices)
     } else {
       setSelectedProducts([])
     }
+  }
+
+  const handleSelectValidOnly = () => {
+    // Select only valid products
+    const validIndices = products
+      .map((product, index) => ({ product, index }))
+      .filter(({ product }) => !product.errors || product.errors.length === 0)
+      .map(({ index }) => index.toString())
+    setSelectedProducts(validIndices)
   }
 
   const handleSelectProduct = (productIndex: string, checked: boolean) => {
@@ -413,8 +433,29 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({ onClose, onUpload }) => 
                     disabled={selectedProducts.length === 0}
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
                   >
-                    Upload {selectedProducts.length} Products
+                    {selectedProducts.length === 0 
+                      ? 'No Valid Products Selected' 
+                      : `Upload ${selectedProducts.length} Valid Products`
+                    }
                   </button>
+                </div>
+                
+                {/* Upload Guidance */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0">
+                      <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+                    </div>
+                    <div className="text-sm text-blue-800">
+                      <p className="font-medium mb-1">Upload Guidance:</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>Only products without errors can be uploaded</li>
+                        <li>Products with warnings can still be uploaded</li>
+                        <li>Invalid products will be skipped automatically</li>
+                        <li>Use &ldquo;Select Valid Only&rdquo; to quickly select all valid products</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -470,17 +511,30 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({ onClose, onUpload }) => 
                     <div className="flex items-center space-x-3">
                       <input
                         type="checkbox"
-                        checked={selectedProducts.length === products.length}
+                        checked={selectedProducts.length === validProducts.length && validProducts.length > 0}
                         onChange={(e) => handleSelectAll(e.target.checked)}
                         className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="text-sm font-medium text-gray-700">
-                        Select All ({products.length})
+                        Select All Valid ({validProducts.length})
                       </span>
+                      <button
+                        onClick={handleSelectValidOnly}
+                        className="ml-2 px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                      >
+                        Select Valid Only
+                      </button>
                     </div>
-                    <span className="text-sm text-gray-500">
-                      {selectedProducts.length} selected
-                    </span>
+                    <div className="flex items-center space-x-4">
+                      <span className="text-sm text-gray-500">
+                        {selectedProducts.length} selected of {validProducts.length} valid
+                      </span>
+                      {invalidProducts.length > 0 && (
+                        <span className="text-sm text-red-500">
+                          {invalidProducts.length} with errors (cannot upload)
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 
