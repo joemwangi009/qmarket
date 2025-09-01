@@ -62,9 +62,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     minStock: product?.minStock || 5,
     maxStock: product?.maxStock || 1000,
     weight: product?.weight || 0,
-    length: product?.dimensions?.length || 0,
-    width: product?.dimensions?.width || 0,
-    height: product?.dimensions?.height || 0,
+    length: (product?.dimensions as Record<string, number>)?.length || 0,
+    width: (product?.dimensions as Record<string, number>)?.width || 0,
+    height: (product?.dimensions as Record<string, number>)?.height || 0,
     
     // Status & Visibility
     status: product?.status || 'draft',

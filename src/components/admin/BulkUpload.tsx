@@ -38,7 +38,6 @@ export const BulkUpload: React.FC<BulkUploadProps> = ({ onClose, onUpload }) => 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      setUploadedFile(file)
       processFile(file)
     }
   }
