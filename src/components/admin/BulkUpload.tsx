@@ -13,7 +13,7 @@ import {
 
 interface BulkUploadProps {
   onClose: () => void
-  onUpload: (products: UploadedProduct[]) => Promise<any[]>
+  onUpload: (products: UploadedProduct[]) => Promise<Array<{ success: boolean; error?: string; sku?: string }>>
 }
 
 interface UploadedProduct {
