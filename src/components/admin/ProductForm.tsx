@@ -191,7 +191,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   }
 
   const generateSlug = () => {
-    const slug = formData.title
+    const title = formData.title as string
+    const slug = title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
