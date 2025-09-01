@@ -175,7 +175,8 @@ export default function AdminProducts() {
           results.push(result)
         } catch (error) {
           console.error(`Failed to create product ${product.sku}:`, error)
-          results.push({ success: false, error: error.message, sku: product.sku })
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+          results.push({ success: false, error: errorMessage, sku: product.sku })
         }
       }
       
