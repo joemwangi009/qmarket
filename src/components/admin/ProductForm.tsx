@@ -262,7 +262,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </label>
                     <input
                       type="text"
-                      value={formData.title}
+                      value={formData.title as string}
                       onChange={(e) => handleInputChange('title', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
@@ -275,7 +275,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </label>
                     <input
                       type="text"
-                      value={formData.sku}
+                      value={formData.sku as string}
                       onChange={(e) => handleInputChange('sku', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
@@ -287,7 +287,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       Brand
                     </label>
                     <select
-                      value={formData.brand}
+                      value={formData.brand as string}
                       onChange={(e) => handleInputChange('brand', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
@@ -303,7 +303,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       Category *
                     </label>
                     <select
-                      value={formData.category}
+                      value={formData.category as string}
                       onChange={(e) => handleInputChange('category', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
@@ -321,7 +321,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     Short Description
                   </label>
                   <textarea
-                    value={formData.shortDescription}
+                    value={formData.shortDescription as string}
                     onChange={(e) => handleInputChange('shortDescription', e.target.value)}
                     rows={2}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -334,7 +334,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     Full Description *
                   </label>
                   <textarea
-                    value={formData.description}
+                    value={formData.description as string}
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     rows={6}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -349,7 +349,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   </label>
                   <input
                     type="text"
-                    value={formData.tags.join(', ')}
+                    value={(formData.tags as string[]).join(', ')}
                     onChange={(e) => handleInputChange('tags', e.target.value.split(',').map(tag => tag.trim()))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter tags separated by commas..."
@@ -372,7 +372,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <input
                         type="number"
                         step="0.01"
-                        value={formData.price}
+                        value={formData.price as number}
                         onChange={(e) => handleInputChange('price', parseFloat(e.target.value) || 0)}
                         className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
@@ -389,7 +389,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <input
                         type="number"
                         step="0.01"
-                        value={formData.originalPrice}
+                        value={formData.originalPrice as number}
                         onChange={(e) => handleInputChange('originalPrice', parseFloat(e.target.value) || 0)}
                         className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -405,7 +405,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       <input
                         type="number"
                         step="0.01"
-                        value={formData.costPrice}
+                        value={formData.costPrice as number}
                         onChange={(e) => handleInputChange('costPrice', parseFloat(e.target.value) || 0)}
                         className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -420,7 +420,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </label>
                     <input
                       type="number"
-                      value={formData.stock}
+                      value={formData.stock as number}
                       onChange={(e) => handleInputChange('stock', parseInt(e.target.value) || 0)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
@@ -433,7 +433,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </label>
                     <input
                       type="number"
-                      value={formData.minStock}
+                      value={formData.minStock as number}
                       onChange={(e) => handleInputChange('minStock', parseInt(e.target.value) || 0)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -445,7 +445,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </label>
                     <input
                       type="number"
-                      value={formData.maxStock}
+                      value={formData.maxStock as number}
                       onChange={(e) => handleInputChange('maxStock', parseInt(e.target.value) || 0)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -460,7 +460,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <input
                       type="number"
                       step="0.01"
-                      value={formData.weight}
+                      value={formData.weight as number}
                       onChange={(e) => handleInputChange('weight', parseFloat(e.target.value) || 0)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -473,7 +473,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <input
                       type="number"
                       step="0.01"
-                      value={formData.length}
+                      value={formData.length as number}
                       onChange={(e) => handleInputChange('length', parseFloat(e.target.value) || 0)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -486,7 +486,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <input
                       type="number"
                       step="0.01"
-                      value={formData.width}
+                      value={formData.width as number}
                       onChange={(e) => handleInputChange('width', parseFloat(e.target.value) || 0)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -499,7 +499,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <input
                       type="number"
                       step="0.01"
-                      value={formData.height}
+                      value={formData.height as number}
                       onChange={(e) => handleInputChange('height', parseFloat(e.target.value) || 0)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -638,7 +638,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </label>
                     <input
                       type="text"
-                      value={formData.metaTitle}
+                      value={formData.metaTitle as string}
                       onChange={(e) => handleInputChange('metaTitle', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="SEO title for search engines"
@@ -652,7 +652,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <div className="flex space-x-2">
                       <input
                         type="text"
-                        value={formData.slug}
+                        value={formData.slug as string}
                         onChange={(e) => handleInputChange('slug', e.target.value)}
                         className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="product-url-slug"
@@ -673,7 +673,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     Meta Description
                   </label>
                   <textarea
-                    value={formData.metaDescription}
+                    value={formData.metaDescription as string}
                     onChange={(e) => handleInputChange('metaDescription', e.target.value)}
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -687,7 +687,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   </label>
                   <input
                     type="text"
-                    value={formData.keywords.join(', ')}
+                    value={(formData.keywords as string[]).join(', ')}
                     onChange={(e) => handleInputChange('keywords', e.target.value.split(',').map(keyword => keyword.trim()))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter keywords separated by commas"
@@ -706,7 +706,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       Product Status
                     </label>
                     <select
-                      value={formData.status}
+                      value={formData.status as string}
                       onChange={(e) => handleInputChange('status', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
@@ -723,7 +723,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                       Visibility
                     </label>
                     <select
-                      value={formData.visibility}
+                      value={formData.visibility as string}
                       onChange={(e) => handleInputChange('visibility', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
@@ -743,7 +743,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     </label>
                     <input
                       type="datetime-local"
-                      value={formData.launchDate}
+                      value={formData.launchDate as string}
                       onChange={(e) => handleInputChange('launchDate', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -753,7 +753,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <input
                       type="checkbox"
                       id="featured"
-                      checked={formData.featured}
+                      checked={formData.featured as boolean}
                       onChange={(e) => handleInputChange('featured', e.target.checked)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
@@ -768,7 +768,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <input
                       type="checkbox"
                       id="isDigital"
-                      checked={formData.isDigital}
+                      checked={formData.isDigital as boolean}
                       onChange={(e) => handleInputChange('isDigital', e.target.checked)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
@@ -785,7 +785,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                         </label>
                         <input
                           type="url"
-                          value={formData.downloadUrl}
+                          value={formData.downloadUrl as string}
                           onChange={(e) => handleInputChange('downloadUrl', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="https://example.com/download"
@@ -797,7 +797,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                         </label>
                         <input
                           type="text"
-                          value={formData.licenseKey}
+                          value={formData.licenseKey as string}
                           onChange={(e) => handleInputChange('licenseKey', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           placeholder="Optional license key"
@@ -810,7 +810,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <input
                       type="checkbox"
                       id="isSubscription"
-                      checked={formData.isSubscription}
+                      checked={formData.isSubscription as boolean}
                       onChange={(e) => handleInputChange('isSubscription', e.target.checked)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
@@ -826,7 +826,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                           Subscription Interval
                         </label>
                         <select
-                          value={formData.subscriptionInterval}
+                          value={formData.subscriptionInterval as string}
                           onChange={(e) => handleInputChange('subscriptionInterval', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
@@ -845,7 +845,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                           <input
                             type="number"
                             step="0.01"
-                            value={formData.subscriptionPrice}
+                            value={formData.subscriptionPrice as number}
                             onChange={(e) => handleInputChange('subscriptionPrice', parseFloat(e.target.value) || 0)}
                             className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
@@ -858,7 +858,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <input
                       type="checkbox"
                       id="isPreOrder"
-                      checked={formData.isPreOrder}
+                      checked={formData.isPreOrder as boolean}
                       onChange={(e) => handleInputChange('isPreOrder', e.target.checked)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
@@ -875,7 +875,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                         </label>
                         <input
                           type="date"
-                          value={formData.preOrderDate}
+                          value={formData.preOrderDate as string}
                           onChange={(e) => handleInputChange('preOrderDate', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
@@ -889,7 +889,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                           <input
                             type="number"
                             step="0.01"
-                            value={formData.preOrderPrice}
+                            value={formData.preOrderPrice as number}
                             onChange={(e) => handleInputChange('preOrderPrice', parseFloat(e.target.value) || 0)}
                             className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
