@@ -73,10 +73,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     launchDate: product?.launchDate || '',
     
     // SEO
-    metaTitle: product?.seo?.metaTitle || '',
-    metaDescription: product?.seo?.metaDescription || '',
-    slug: product?.seo?.slug || '',
-    keywords: product?.seo?.keywords || [],
+    metaTitle: (product?.seo as Record<string, unknown>)?.metaTitle as string || '',
+    metaDescription: (product?.seo as Record<string, unknown>)?.metaDescription as string || '',
+    slug: (product?.seo as Record<string, unknown>)?.slug as string || '',
+    keywords: (product?.seo as Record<string, unknown>)?.keywords as string[] || [],
     
     // Digital Product
     isDigital: product?.isDigital || false,
