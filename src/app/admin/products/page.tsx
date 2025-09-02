@@ -21,6 +21,52 @@ import { ProductForm } from '@/components/admin/ProductForm'
 import { ProductEdit } from '@/components/admin/ProductEdit'
 import { BulkUpload } from '@/components/admin/BulkUpload'
 
+// Import the UploadedProduct type
+interface UploadedProduct {
+  title: string
+  description: string
+  shortDescription: string
+  sku: string
+  brand: string
+  category: string
+  subcategory: string
+  tags: string[]
+  price: number
+  originalPrice: number
+  costPrice: number
+  taxRate: number
+  stock: number
+  minStock: number
+  maxStock: number
+  weight: number
+  length: number
+  width: number
+  height: number
+  status: string
+  featured: boolean
+  visibility: string
+  launchDate: string
+  metaTitle: string
+  metaDescription: string
+  slug: string
+  keywords: string[]
+  isDigital: boolean
+  downloadUrl: string
+  licenseKey: string
+  isSubscription: boolean
+  subscriptionInterval: string
+  subscriptionPrice: number
+  isPreOrder: boolean
+  preOrderDate: string
+  preOrderPrice: number
+  images: string[]
+  variations: Record<string, string[]>
+  attributes: Record<string, string>
+  errors?: string[]
+  warnings?: string[]
+  [key: string]: unknown // Allow additional properties
+}
+
 // Mock product data - in production, this would come from the database
 interface Product {
   id: string
@@ -165,7 +211,7 @@ export default function AdminProducts() {
     }
   }
 
-  const bulkUploadProducts = async (uploadedProducts: Record<string, unknown>[]) => {
+  const bulkUploadProducts = async (uploadedProducts: UploadedProduct[]) => {
     try {
       // Create products one by one
       const results = []
