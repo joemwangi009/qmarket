@@ -58,8 +58,6 @@ interface Product {
   [key: string]: unknown // Allow additional properties
 }
 
-
-
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -172,7 +170,7 @@ export default function AdminProducts() {
       const results = []
       for (const product of uploadedProducts) {
         try {
-          const result = await createProduct(product as Record<string, unknown>)
+          const result = await createProduct(product as unknown as Record<string, unknown>)
           results.push(result)
         } catch (error) {
           console.error(`Failed to create product ${product.sku}:`, error)
@@ -687,7 +685,7 @@ export default function AdminProducts() {
         />
       )}
 
-            {/* Product Edit Modal */}
+      {/* Product Edit Modal */}
       {showEditModal && editingProduct && (
         <ProductEdit
           product={editingProduct}
@@ -708,4 +706,4 @@ export default function AdminProducts() {
       )}
     </div>
   )
-} 
+}
