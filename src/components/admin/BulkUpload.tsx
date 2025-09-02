@@ -16,7 +16,7 @@ interface BulkUploadProps {
   onUpload: (products: UploadedProduct[]) => Promise<Array<{ success: boolean; error?: string; sku?: string }>>
 }
 
-interface UploadedProduct {
+export interface UploadedProduct {
   // Basic Information
   title: string
   description: string
